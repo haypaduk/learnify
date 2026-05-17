@@ -1,0 +1,55 @@
+<!-- ============================================
+     ARCHIVO 23/30: CREAR TAREA
+     Formulario para crear una nueva tarea en un equipo
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Crear Tarea</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/crear-tarea.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Crear Nueva Tarea</h2>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="mensaje"></div>
+
+        <!-- Formulario -->
+        <form id="formCrearTarea" class="form-tarea">
+            <div class="form-grupo">
+                <label for="titulo">Título de la tarea *</label>
+                <input type="text" id="titulo" placeholder="Ej: Reporte semanal, Examen parcial, etc." required>
+                <div class="ayuda">Elige un título claro para la tarea.</div>
+            </div>
+
+            <div class="form-grupo">
+                <label for="descripcion">Descripción (opcional)</label>
+                <textarea id="descripcion" placeholder="Describe qué deben hacer los alumnos, instrucciones, etc."></textarea>
+                <div class="ayuda">Explica claramente lo que se espera.</div>
+            </div>
+
+            <div class="form-grupo">
+                <label for="fecha_limite">Fecha límite (opcional)</label>
+                <input type="date" id="fecha_limite">
+                <div class="ayuda">Fecha máxima para entregar la tarea.</div>
+            </div>
+
+            <div class="botones-form">
+                <button type="button" class="btn secundario btn-cancelar" onclick="cancelar()">Cancelar</button>
+                <button type="submit" class="btn primario">Crear tarea</button>
+            </div>
+        </form>
+
+        <div class="volver" style="margin-top: 1.5rem;">
+            <a href="#" id="volverLink">← Volver a tareas</a>
+        </div>
+    </div>
+
+    <script src="../js/crear-tarea.js"></script>
+</body>
+</html>

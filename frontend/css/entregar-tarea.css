@@ -1,0 +1,99 @@
+/* ============================================
+     ARCHIVO: entregar-tarea.css
+     Estilos para el formulario de entrega de tarea
+     ============================================ */
+
+.form-entrega {
+    margin-top: 1rem;
+}
+
+.form-grupo {
+    margin-bottom: 1.5rem;
+}
+
+.form-grupo label {
+    display: block;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.form-grupo textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.2s;
+}
+
+.form-grupo textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.info-tarea {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-tarea h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.info-tarea p {
+    color: #475569;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-tarea .fecha-limite {
+    font-size: 0.8rem;
+    color: #f59e0b;
+    margin-top: 0.5rem;
+}
+
+.botones-form {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.botones-form button {
+    flex: 1;
+}
+
+.btn-cancelar {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.btn-cancelar:hover {
+    background: #e2e8f0;
+}
+
+.entrega-existente {
+    background: #d1fae5;
+    border: 1px solid #a7f3d0;
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.entrega-existente p {
+    color: #065f46;
+    margin-bottom: 0.5rem;
+}
+
+.entrega-existente .fecha-entrega {
+    font-size: 0.8rem;
+    color: #047857;
+}

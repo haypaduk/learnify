@@ -1,0 +1,243 @@
+/* ============================================
+     ARCHIVO: equipos.css
+     Estilos específicos para la gestión de equipos
+     ============================================ */
+
+/* Cabecera de equipos */
+.header-equipos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-equipos h2 {
+    margin-bottom: 0;
+}
+
+.btn-crear {
+    background: #48bb78;
+    color: white;
+}
+
+.btn-crear:hover {
+    background: #38a169;
+}
+
+/* Grid de equipos */
+.equipos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Tarjeta de equipo */
+.equipo-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.equipo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+.equipo-nombre {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.equipo-descripcion {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.equipo-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.equipo-miembros {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.equipo-lider {
+    background: #e6f0ff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #2563eb;
+}
+
+.btn-ver {
+    background: #2563eb;
+    padding: 6px 16px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.btn-unirse {
+    background: #f59e0b;
+    padding: 6px 16px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Mensaje cuando no hay equipos */
+.sin-equipos {
+    text-align: center;
+    padding: 3rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    color: #64748b;
+}
+
+/* Formulario para unirse */
+.form-unirse {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f1f5f9;
+    border-radius: 16px;
+}
+
+.form-unirse.visible {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group input {
+    margin: 0;
+}
+
+/* Botón eliminar equipo */
+.btn-eliminar {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.btn-eliminar:hover {
+    background: #fecaca;
+    transform: none;
+}
+
+/* Contenedor de acciones en tarjeta */
+.equipo-acciones {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-ver {
+    background: #2563eb;
+    padding: 6px 16px;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Modal de confirmación */
+.modal-confirmacion {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-confirmacion .modal-contenido {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-confirmacion .modal-botones {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.modal-confirmacion .btn-confirmar {
+    background: #dc2626;
+    color: white;
+}
+
+.modal-confirmacion .btn-cancelar {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+/* Botón salir del equipo (para alumnos) */
+.btn-salir {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.btn-salir:hover {
+    background: #fde68a;
+    transform: none;
+}
+
+/* Botón de tareas */
+.btn-tareas {
+    background: #8b5cf6;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.btn-tareas:hover {
+    background: #7c3aed;
+}
+
+.btn-chat {
+    background: #8b5cf6;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-chat:hover {
+    background: #7c3aed;
+}

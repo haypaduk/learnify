@@ -1,0 +1,40 @@
+<!-- ============================================
+     ARCHIVO 26/30: VER ENTREGAS DE TAREA
+     Solo visible para líderes del equipo
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Entregas de Tarea</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/entregas-tarea.css">
+</head>
+<body>
+    <div class="contenedor contenedor-grande">
+        <!-- Cabecera -->
+        <div class="header-entregas">
+            <button onclick="volverATareas()" class="btn secundario" style="margin-bottom: 1rem;">← Volver a tareas</button>
+            <h2>Entregas de Tarea</h2>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="mensaje"></div>
+
+        <!-- Información de la tarea -->
+        <div id="infoTarea" class="info-tarea-calificar">
+            <div class="sin-entregas">Cargando información...</div>
+        </div>
+
+        <!-- Lista de entregas -->
+        <h3 style="margin-bottom: 1rem;">Entregas de alumnos</h3>
+        <div id="entregasContainer" class="entregas-lista">
+            <div class="sin-entregas">Cargando entregas...</div>
+        </div>
+    </div>
+
+    <script src="../js/entregas-tarea.js"></script>
+</body>
+</html>

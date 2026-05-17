@@ -1,0 +1,244 @@
+/* ============================================
+     ARCHIVO: dashboard.css
+     Estilos específicos del dashboard
+     ============================================ */
+
+/* Contenedor principal */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header con info del usuario */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    color: white;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.user-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    margin-top: 1rem;
+}
+
+/* Grid de secciones */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Tarjetas */
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.card h3 {
+    color: #1e293b;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Lista de equipos */
+.equipos-lista {
+    list-style: none;
+}
+
+.equipo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.equipo-item:last-child {
+    border-bottom: none;
+}
+
+.equipo-nombre {
+    font-weight: 500;
+    color: #334155;
+}
+
+.equipo-rol {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.empty-message {
+    color: #94a3b8;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Acciones rápidas */
+.acciones {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.btn-accion {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #334155;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-accion:hover {
+    background: #f1f5f9;
+    transform: translateY(-2px);
+}
+
+/* Botón de cerrar sesión */
+.btn-cerrar-sesion {
+    background: none;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1.5rem;
+    width: auto;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cerrar-sesion:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+/* ============================================
+     ESTILOS PARA TAREAS EN DASHBOARD
+     ============================================ */
+
+.tarea-pendiente-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 1rem;
+}
+
+.tarea-pendiente-item:last-child {
+    border-bottom: none;
+}
+
+.tarea-pendiente-info {
+    flex: 1;
+}
+
+.tarea-pendiente-titulo {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.tarea-pendiente-equipo {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.tarea-pendiente-fecha {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+}
+
+.tarea-pendiente-fecha.vencida {
+    color: #dc2626;
+}
+
+.tarea-pendiente-entregas {
+    font-size: 0.7rem;
+    color: #2563eb;
+    margin-top: 0.25rem;
+}
+
+.btn-entregar-pequeno {
+    background: #f59e0b;
+    color: white;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-entregar-pequeno:hover {
+    background: #d97706;
+}
+
+.btn-ver-pequeno {
+    background: #2563eb;
+    color: white;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    margin: 0;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-ver-pequeno:hover {
+    background: #1d4ed8;
+}
+
+.ver-mas {
+    text-align: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.ver-mas a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.ver-mas a:hover {
+    text-decoration: underline;
+}

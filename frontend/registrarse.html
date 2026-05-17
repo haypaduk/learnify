@@ -1,0 +1,54 @@
+<!DOCTYPE html> <!-- Indica el lenguaje a HTML5 ultima version en los navegadores.-->
+<html lang = "es"> <!--lang = "es" = pagina en español.-->
+<head> <!--- Son configuraciones q no saldran en la pagina, es como tener algo dentro de datos sin q se vean de configuraciones. --->
+    <meta charset="UTF-8"> <!--- Para usar ñ y tildes. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para moviles-->
+    <title> Learnify | Registrarse </title> <!-- Titulo de la pestaña. -->
+
+    <link rel="stylesheet" href="css/base.css">
+</head>
+
+
+<body> <!-- Todo lo q se coloque dentro, se mostrara en el navegador o pagina. -->
+    <div class="contenedor"> <!-- "división", es como una caja que agrupa contenido
+         class="contenedor" = le aplicamos la clase "contenedor" del CSS
+         Esta clase del CSS hace que la caja tenga:
+         - Fondo blanco
+         - Bordes redondeados
+         - Sombra
+         - Ancho máximo de 400px-->
+
+         <h2> Crear cuenta.</h2> <!-- Encabezado nivel 2, se coloca lo q se quiera dar a entender.-->
+    <div id="mensaje" class="mensaje"></div> <!-- id="mensaje" es el identificador unico, class="mensaje" son la clase de los estilos del CSS. -->
+
+    <form id="formulario-registro"> <!-- <form> = Crea un formulario id="formulario-registro" = para que JavaScript lo encuentre. -->
+
+    <input type="text" id="nombre" placeholder="Nombre Completo" required> <!-- Campo de texto - Nombre -->
+    <input type="email" id="email" placeholder="Escribe tu correo" required> <!-- Campo de correo - Correo -->
+    <input type="password" id="password" placeholder="Escribe tu contraseña" required> <!-- Campo paracontraseña - Contraseña -->
+    
+    <select id="rol" required> <!-- Selector de roles - Rol -->
+    <option value="">Selecciona tu Rol.</option>
+    <option value="maestro">Maestro/Lider de Equipo</option>
+    <option value="alumno">Alumno/Miembro de Equipo</option>
+    </select>
+
+    <button type="submit" class="btn primario btn-block">Registrarse</button> <!-- type="submit" = al hacer click, envia formulario, 
+    class="btn primario btn-block" = estilos del CSS. -->
+
+    </form>
+
+    <div class="enlace-rapido">
+        ¿Ya tienes cuenta?<a href="iniciar_sesion.html">Iniciar sesión</a> <!-- Enlace a otra pagina. -->
+    </div>
+
+    <div class="volver">
+        <a href="bienvenida.html">← Volver al inicio</a>
+    </div>
+
+</div>
+
+<script src="js/autenticacion.js"></script>
+</body>
+
+</html>

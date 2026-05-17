@@ -1,0 +1,46 @@
+<!-- ============================================
+     ARCHIVO: crear-equipo.html
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Crear Equipo</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/crear-equipo.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Crear Nuevo Equipo</h2>
+        
+        <div id="mensaje" class="mensaje"></div>
+        
+        <form id="formCrearEquipo" class="form-equipo">
+            <div class="form-grupo">
+                <label for="nombre">Nombre del equipo *</label>
+                <input type="text" id="nombre" placeholder="Ej: Equipo Verde, Desarrollo Web" required>
+                <div class="ayuda">Elige un nombre claro para identificar el equipo.</div>
+            </div>
+            
+            <div class="form-grupo">
+                <label for="descripcion">Descripción (opcional)</label>
+                <textarea id="descripcion" placeholder="¿Qué objetivos tiene este equipo?"></textarea>
+                <div class="ayuda">Describe brevemente el propósito del equipo.</div>
+            </div>
+            
+            <div class="botones-form">
+                <button type="button" class="btn secundario btn-cancelar" onclick="cancelar()">Cancelar</button>
+                <button type="submit" class="btn primario">Crear equipo</button>
+            </div>
+        </form>
+        
+        <div class="volver" style="margin-top: 1.5rem;">
+            <a href="mis_equipos.html">← Volver a Mis Equipos</a>
+        </div>
+    </div>
+    
+    <script src="../js/crear-equipo.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Chat del Equipo</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/chat.css">
+</head>
+<body>
+    <div class="contenedor contenedor-grande">
+        <div class="volver" style="margin-bottom: 1rem;">
+            <a href="#" id="volverLink">← Volver al equipo</a>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>💬 Chat del equipo</h3>
+                <div class="chat-estado conectado" id="estadoChat">Conectado</div>
+            </div>
+
+            <!-- IMPORTANTE: Este div debe tener el ID correcto -->
+            <div class="chat-mensajes" id="chatMensajes">
+                <div class="empty-message">Cargando mensajes...</div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="mensajeInput" placeholder="Escribe un mensaje..." maxlength="500">
+                <button id="btnEnviar" class="btn primario btn-chat">📤 Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/chat.js"></script>
+</body>
+</html>

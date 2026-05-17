@@ -1,0 +1,72 @@
+<!-- ============================================
+     ARCHIVO: dashboard.html
+     Dashboard principal - Solo estructura HTML
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Dashboard</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header con información del usuario -->
+        <div class="dashboard-header">
+            <h1>Learnify</h1>
+            <p>Bienvenido/a, <strong id="usuarioNombre">Cargando...</strong></p>
+            <div class="user-badge" id="usuarioRol"></div>
+        </div>
+
+        <!-- Grid de secciones -->
+        <div class="dashboard-grid">
+            <!-- Card: Mis Equipos -->
+            <div class="card">
+                <h3>Mis Equipos</h3>
+                <div id="equiposLista">
+                    <div class="empty-message">Cargando equipos...</div>
+                </div>
+                <div class="acciones">
+                    <a href="pages/mis_equipos.html" class="btn-accion">Ver todos</a>
+                </div>
+            </div>
+
+            <!-- Card: Acciones Rápidas -->
+            <div class="card">
+                <h3>Acciones Rápidas</h3>
+                <div class="acciones">
+                    <a href="pages/mis_equipos.html" class="btn-accion">Crear equipo</a>
+                    <a href="pages/mis_equipos.html" class="btn-accion">Unirse a equipo</a>
+                </div>
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+                    <a href="pages/mis_equipos.html" class="btn-accion" style="background: #667eea; color: white;">Gestionar equipos</a>
+                </div>
+            </div>
+
+            <!-- Card: Tareas Pendientes -->
+            <div class="card">
+                <h3>Tareas Pendientes</h3>
+                <div id="tareasPendientesLista">
+                    <div class="empty-message">Cargando tareas...</div>
+                </div>
+                <div class="acciones">
+                    <a href="pages/mis_equipos.html" class="btn-accion">Ver todas</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cerrar sesión -->
+        <div style="margin-top: 2rem; text-align: center;">
+            <button onclick="cerrarSesion()" class="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+/* ============================================
+     ESTILOS PARA EL CHAT
+     ============================================ */
+
+.chat-container {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+}
+
+.chat-header {
+    background: #667eea;
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h3 {
+    margin: 0;
+    color: white;
+}
+
+.chat-mensajes {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #f8fafc;
+}
+
+.mensaje {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    word-wrap: break-word;
+}
+
+.mensaje-propio {
+    align-self: flex-end;
+    background: #667eea;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.mensaje-otro {
+    align-self: flex-start;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+}
+
+.mensaje-autor {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    opacity: 0.8;
+}
+
+.mensaje-texto {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.mensaje-fecha {
+    font-size: 0.6rem;
+    margin-top: 0.25rem;
+    text-align: right;
+    opacity: 0.6;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 1rem;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    gap: 0.5rem;
+}
+
+.chat-input-area input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 30px;
+    font-size: 0.9rem;
+}
+
+.chat-input-area input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.chat-input-area button {
+    width: auto;
+    padding: 0.75rem 1.5rem;
+    margin: 0;
+    border-radius: 30px;
+}
+
+.btn-chat {
+    background: #667eea;
+}
+
+.btn-actualizar {
+    background: #48bb78;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    width: auto;
+}
+
+/* Estado de conexión */
+.chat-estado {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+}
+
+.chat-estado.conectado {
+    background: #48bb78;
+}
+
+.chat-estado.desconectado {
+    background: #ef4444;
+}
+
+/* ============================================
+     ESTILOS DE RESPALDO PARA DEPURACIÓN
+     ============================================ */
+
+.chat-mensajes .mensaje {
+    display: block !important;
+    margin-bottom: 10px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+}
+
+.chat-mensajes .mensaje-propio {
+    background-color: #667eea !important;
+    color: white !important;
+    text-align: right !important;
+}
+
+.chat-mensajes .mensaje-otro {
+    background-color: #e2e8f0 !important;
+    color: #1e293b !important;
+    text-align: left !important;
+}
+
+.chat-mensajes .mensaje-autor {
+    font-weight: bold !important;
+    font-size: 12px !important;
+}
+
+.chat-mensajes .mensaje-texto {
+    font-size: 14px !important;
+}
+
+.chat-mensajes .mensaje-fecha {
+    font-size: 10px !important;
+    opacity: 0.7 !important;
+}

@@ -1,0 +1,52 @@
+Algoritmo Modulo_Venta_Inventario
+	// Definicion de catalogo y logistica
+	Dimension ProductosNombre[2]; Dimension ProductosStock[2]; Dimension ProductosPrecio[2]
+	
+	ProductosNombre[1] <- "Smartphone"; ProductosStock[1] <- 10; ProductosPrecio[1] <- 12000
+	ProductosNombre[2] <- "Laptop"; ProductosStock[2] <- 5; ProductosPrecio[2] <- 25000
+	
+	Escribir "MODULO DE VENTAS - GLOBAL MART"
+	Escribir "1. ", ProductosNombre[1], " ($", ProductosPrecio[1], ") | Stock: ", ProductosStock[1]
+	Escribir "2. ", ProductosNombre[2], " ($", ProductosPrecio[2], ") | Stock: ", ProductosStock[2]
+	
+	Escribir "Seleccione el producto a comprar:"
+	Leer ID_Prod
+	
+	Si ID_Prod = 1 O ID_Prod = 2 Entonces
+		Escribir "Ingrese la cantidad deseada:"
+		Leer Cantidad
+		
+		Si Cantidad > 0 Y Cantidad <= ProductosStock[ID_Prod] Entonces
+			TotalPagar <- Cantidad * ProductosPrecio[ID_Prod]
+			Escribir "Monto a liquidar: $", TotalPagar
+			
+			Escribir "Metodo de Pago: 1. Tarjeta | 2. Efectivo"
+			Leer Metodo
+			PagoAprobado <- Falso
+			
+			Si Metodo = 1 Entonces
+				Escribir "Ingrese los 16 digitos de su tarjeta:"
+				Leer NumTarjeta
+				Si Longitud(NumTarjeta) = 16 Entonces
+					PagoAprobado <- Verdadero
+					Escribir "Transaccion bancaria autorizada por el emisor."
+				Sino
+					Escribir "Error: El numero de tarjeta no es valido."
+				FinSi
+			Sino
+				Ref <- Aleatorio(1000, 9999)
+				Escribir "Referencia de pago generada: GM-", Ref
+				PagoAprobado <- Verdadero
+			FinSi
+			
+			Si PagoAprobado = Verdadero Entonces
+				ProductosStock[ID_Prod] <- ProductosStock[ID_Prod] - Cantidad
+				Escribir "VENTA EXITOSA. Stock actualizado: ", ProductosStock[ID_Prod]
+			FinSi
+		Sino
+			Escribir "ERROR: No contamos con el stock solicitado."
+		FinSi
+	Sino
+		Escribir "ERROR: Producto no identificado."
+	FinSi
+FinAlgoritmo

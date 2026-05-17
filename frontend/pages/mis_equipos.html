@@ -1,0 +1,51 @@
+<!-- ============================================
+     ARCHIVO 13/20: MIS EQUIPOS
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Mis Equipos</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/equipos.css">
+</head>
+<body>
+    <div class="contenedor contenedor-grande">
+        <!-- Cabecera -->
+        <div class="header-equipos">
+            <h2>Mis Equipos</h2>
+            <div>
+                <button id="btnMostrarUnirse" class="btn secundario" style="margin-right: 10px;">Unirse a equipo</button>
+                <button id="btnCrearEquipo" class="btn primario btn-crear">Crear equipo</button>
+            </div>
+        </div>
+        
+        <!-- Mensajes -->
+        <div id="mensaje" class="mensaje"></div>
+        
+        <!-- Formulario para unirse -->
+        <div id="formUnirse" class="form-unirse">
+            <h3 style="margin-bottom: 1rem;">Unirse a equipo</h3>
+            <div class="form-group">
+                <input type="text" id="codigoEquipo" placeholder="ID del equipo (número)" required>
+            </div>
+            <button id="btnConfirmarUnirse" class="btn primario">Confirmar</button>
+            <button id="btnCancelarUnirse" class="btn secundario" style="margin-top: 0;">Cancelar</button>
+        </div>
+        
+        <!-- Contenedor de equipos -->
+        <div id="equiposContainer" class="equipos-grid">
+            <div class="sin-equipos">Cargando equipos...</div>
+        </div>
+        
+        <!-- Enlaces -->
+        <div class="volver" style="margin-top: 2rem;">
+            <a href="../dashboard.html">← Volver al Dashboard</a>
+        </div>
+    </div>
+    
+    <script src="../js/equipos.js"></script>
+</body>
+</html>

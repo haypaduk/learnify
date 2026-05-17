@@ -1,0 +1,55 @@
+<!-- ============================================
+     ARCHIVO 24/30: ENTREGAR TAREA
+     Formulario para que los alumnos entreguen una tarea
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Entregar Tarea</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/entregar-tarea.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h2>📤 Entregar Tarea</h2>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="mensaje"></div>
+
+        <!-- Información de la tarea -->
+        <div id="infoTarea" class="info-tarea">
+            <div class="sin-tareas">Cargando información de la tarea...</div>
+        </div>
+
+        <!-- Formulario de entrega -->
+        <form id="formEntregar" class="form-entrega" style="display: none;">
+            <div class="form-grupo">
+                <label for="comentario">Comentario / Explicación</label>
+                <textarea id="comentario" placeholder="Explica qué hiciste, cómo resolviste la tarea, etc."></textarea>
+                <div class="ayuda">Opcional: puedes agregar una explicación de tu trabajo.</div>
+            </div>
+
+            <!-- Campo para archivo - AHORA DENTRO DEL FORMULARIO -->
+            <div class="form-grupo">
+                <label for="archivo">📎 Adjuntar archivo (opcional)</label>
+                <input type="file" id="archivo" accept=".pdf,.jpg,.png,.doc,.docx,.txt">
+                <div class="ayuda">Formatos permitidos: PDF, imágenes, Word, TXT (máx 10MB)</div>
+            </div>
+
+            <div class="botones-form">
+                <button type="button" class="btn secundario btn-cancelar" onclick="cancelar()">Cancelar</button>
+                <button type="submit" class="btn primario">📤 Entregar tarea</button>
+            </div>
+        </form>
+
+        <div class="volver" style="margin-top: 1.5rem;">
+            <a href="#" id="volverLink">← Volver a tareas</a>
+        </div>
+    </div>
+
+    <script src="../js/entregar-tarea.js"></script>
+</body>
+</html>

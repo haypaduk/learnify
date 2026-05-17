@@ -1,0 +1,37 @@
+<!-- ============================================
+     ARCHIVO 22/30: TAREAS DEL EQUIPO
+     Muestra todas las tareas de un equipo
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Tareas del Equipo</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/tareas.css">
+</head>
+<body>
+    <div class="contenedor contenedor-grande">
+        <!-- Cabecera -->
+        <div class="header-tareas">
+            <div>
+                <button onclick="volverAlEquipo()" class="btn secundario" style="margin-bottom: 0;">← Volver al equipo</button>
+                <h2 style="margin-top: 1rem;">Tareas del Equipo</h2>
+            </div>
+            <button id="btnCrearTarea" class="btn primario btn-crear-tarea">Crear tarea</button>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="mensaje" class="mensaje"></div>
+
+        <!-- Contenedor de tareas -->
+        <div id="tareasContainer" class="tareas-grid">
+            <div class="sin-tareas">Cargando tareas...</div>
+        </div>
+    </div>
+
+    <script src="../js/tareas.js"></script>
+</body>
+</html>

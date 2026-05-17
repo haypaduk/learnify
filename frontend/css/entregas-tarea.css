@@ -1,0 +1,166 @@
+/* ============================================
+     ARCHIVO 25/30: ESTILOS PARA VER ENTREGAS
+     ============================================ */
+
+/* Cabecera */
+.header-entregas {
+    margin-bottom: 2rem;
+}
+
+.header-entregas h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Información de la tarea */
+.info-tarea-calificar {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-tarea-calificar h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.info-tarea-calificar .tarea-desc {
+    color: #475569;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.info-tarea-calificar .tarea-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+/* Lista de entregas */
+.entregas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.entrega-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.entrega-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.entrega-header {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.entrega-alumno {
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.entrega-fecha {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.entrega-body {
+    padding: 1rem 1.5rem;
+}
+
+.entrega-comentario {
+    color: #475569;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    background: #f1f5f9;
+    padding: 0.75rem;
+    border-radius: 12px;
+}
+
+.entrega-calificacion {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.entrega-calificacion label {
+    font-weight: 500;
+    color: #334155;
+}
+
+.entrega-calificacion input {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.entrega-calificacion input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.entrega-calificacion .calificacion-actual {
+    font-weight: 600;
+    color: #059669;
+    background: #d1fae5;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.btn-calificar-entrega {
+    background: #8b5cf6;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.sin-entregas {
+    text-align: center;
+    padding: 3rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    color: #64748b;
+}
+
+/* Estilo para el enlace del archivo */
+.entrega-archivo {
+    margin: 10px 0;
+    padding: 8px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.entrega-archivo a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.entrega-archivo a:hover {
+    text-decoration: underline;
+}

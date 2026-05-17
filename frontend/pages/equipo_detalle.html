@@ -1,0 +1,43 @@
+<!-- ============================================
+     ARCHIVO 14/20: DETALLE DE EQUIPO
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Equipo</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/equipo-detalle.css">
+</head>
+<body>
+    <div class="contenedor contenedor-grande">
+        <!-- Botón volver -->
+        <div class="volver" style="margin-bottom: 1rem;">
+            <a href="../pages/mis_equipos.html">← Volver a Mis Equipos</a>
+        </div>
+
+        <!-- Contenedor de contenido (se llena con JS) -->
+        <div id="equipoContent">
+            <div class="sin-equipos">Cargando información del equipo...</div>
+        </div>
+
+        <!-- Modal para agregar miembros (solo líder) -->
+        <div id="modalAgregar" class="modal" style="display: none;">
+            <div class="modal-contenido">
+                <div class="modal-header">
+                    <h3>Agregar miembro</h3>
+                    <button class="modal-cerrar" onclick="cerrarModal()">&times;</button>
+                </div>
+                <p>Para que un alumno se una, comparte este código:</p>
+                <p style="font-size: 2rem; font-weight: bold; text-align: center; background: #f1f5f9; padding: 1rem; border-radius: 12px;" id="equipoIdCodigo"></p>
+                <p style="font-size: 0.8rem; color: #64748b;">El alumno debe ir a "Mis Equipos" → "Unirse a equipo" y escribir este número.</p>
+                <button class="btn primario" style="margin-top: 1rem;" onclick="cerrarModal()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/equipo-detalle.js"></script>
+</body>
+</html>
