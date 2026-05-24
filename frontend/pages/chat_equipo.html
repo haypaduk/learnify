@@ -1,3 +1,7 @@
+<!-- ============================================
+     ARCHIVO: CHAT DEL EQUIPO
+     ============================================ -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,31 +10,65 @@
     <title>Learnify | Chat del Equipo</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/chat.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <div class="contenedor contenedor-grande">
-        <div class="volver" style="margin-bottom: 1rem;">
-            <a href="#" id="volverLink">← Volver al equipo</a>
-        </div>
-
-        <div class="chat-container">
-            <div class="chat-header">
-                <h3>💬 Chat del equipo</h3>
-                <div class="chat-estado conectado" id="estadoChat">Conectado</div>
+<body class="menu-lateral">
+    <div class="app-container">
+        <!-- ============================================ -->
+        <!-- MENÚ LATERAL                                 -->
+        <!-- ============================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i><span> Learnify</span></h2>
             </div>
-
-            <!-- IMPORTANTE: Este div debe tener el ID correcto -->
-            <div class="chat-mensajes" id="chatMensajes">
-                <div class="empty-message">Cargando mensajes...</div>
+            <nav class="sidebar-nav">
+                <a href="../dashboard.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i><span> Dashboard</span>
+                </a>
+                <a href="../pages/mis_equipos.html" class="menu-item">
+                    <i class="fas fa-users"></i><span> Mis Equipos</span>
+                </a>
+                <a href="#" class="menu-item" id="menuCrearEquipo" style="display: none;">
+                    <i class="fas fa-plus-circle"></i><span> Crear Equipo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info-sidebar" id="userInfoSidebar"></div>
+                <button class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span>
+                </button>
             </div>
+        </aside>
 
-            <div class="chat-input-area">
-                <input type="text" id="mensajeInput" placeholder="Escribe un mensaje..." maxlength="500">
-                <button id="btnEnviar" class="btn primario btn-chat">📤 Enviar</button>
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL                          -->
+        <!-- ============================================ -->
+        <main class="main-content">
+            <div class="contenedor contenedor-grande">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <h3>💬 Chat del equipo</h3>
+                        <div class="chat-estado conectado" id="estadoChat">Conectado</div>
+                    </div>
+
+                    <div class="chat-mensajes" id="chatMensajes">
+                        <div class="empty-message">Cargando mensajes...</div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input type="text" id="mensajeInput" placeholder="Escribe un mensaje..." maxlength="500">
+                        <button id="btnEnviar" class="btn primario btn-chat">📤 Enviar</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
+    <!-- ============================================ -->
+    <!-- SCRIPTS (orden importante)                   -->
+    <!-- ============================================ -->
+    <script src="../js/menu.js"></script>
     <script src="../js/chat.js"></script>
 </body>
 </html>

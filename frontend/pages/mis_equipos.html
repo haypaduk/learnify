@@ -10,42 +10,72 @@
     <title>Learnify | Mis Equipos</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/equipos.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <div class="contenedor contenedor-grande">
-        <!-- Cabecera -->
-        <div class="header-equipos">
-            <h2>Mis Equipos</h2>
-            <div>
-                <button id="btnMostrarUnirse" class="btn secundario" style="margin-right: 10px;">Unirse a equipo</button>
-                <button id="btnCrearEquipo" class="btn primario btn-crear">Crear equipo</button>
+<body class="menu-lateral">
+    <div class="app-container">
+        <!-- ============================================ -->
+        <!-- MENÚ LATERAL                                 -->
+        <!-- ============================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i><span> Learnify</span></h2>
             </div>
-        </div>
-        
-        <!-- Mensajes -->
-        <div id="mensaje" class="mensaje"></div>
-        
-        <!-- Formulario para unirse -->
-        <div id="formUnirse" class="form-unirse">
-            <h3 style="margin-bottom: 1rem;">Unirse a equipo</h3>
-            <div class="form-group">
-                <input type="text" id="codigoEquipo" placeholder="ID del equipo (número)" required>
+            <nav class="sidebar-nav">
+                <a href="../dashboard.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i><span> Dashboard</span>
+                </a>
+                <a href="../pages/mis_equipos.html" class="menu-item active">
+                    <i class="fas fa-users"></i><span> Mis Equipos</span>
+                </a>
+                <a href="#" class="menu-item" id="menuCrearEquipo" style="display: none;">
+                    <i class="fas fa-plus-circle"></i><span> Crear Equipo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info-sidebar" id="userInfoSidebar"></div>
+                <button class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span>
+                </button>
             </div>
-            <button id="btnConfirmarUnirse" class="btn primario">Confirmar</button>
-            <button id="btnCancelarUnirse" class="btn secundario" style="margin-top: 0;">Cancelar</button>
-        </div>
-        
-        <!-- Contenedor de equipos -->
-        <div id="equiposContainer" class="equipos-grid">
-            <div class="sin-equipos">Cargando equipos...</div>
-        </div>
-        
-        <!-- Enlaces -->
-        <div class="volver" style="margin-top: 2rem;">
-            <a href="../dashboard.html">← Volver al Dashboard</a>
-        </div>
+        </aside>
+
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL                          -->
+        <!-- ============================================ -->
+        <main class="main-content">
+            <div class="contenedor contenedor-grande">
+                <div class="header-equipos">
+                    <h2>Mis Equipos</h2>
+                    <div>
+                        <button id="btnMostrarUnirse" class="btn secundario" style="margin-right: 10px;">Unirse a equipo</button>
+                        <button id="btnCrearEquipo" class="btn primario btn-crear">Crear equipo</button>
+                    </div>
+                </div>
+                
+                <div id="mensaje" class="mensaje"></div>
+                
+                <div id="formUnirse" class="form-unirse">
+                    <h3 style="margin-bottom: 1rem;">Unirse a equipo</h3>
+                    <div class="form-group">
+                        <input type="text" id="codigoEquipo" placeholder="ID del equipo (número)" required>
+                    </div>
+                    <button id="btnConfirmarUnirse" class="btn primario">Confirmar</button>
+                    <button id="btnCancelarUnirse" class="btn secundario" style="margin-top: 0;">Cancelar</button>
+                </div>
+                
+                <div id="equiposContainer" class="equipos-grid">
+                    <div class="sin-equipos">Cargando equipos...</div>
+                </div>
+            </div>
+        </main>
     </div>
-    
+
+    <!-- ============================================ -->
+    <!-- SCRIPTS (orden importante)                   -->
+    <!-- ============================================ -->
+    <script src="../js/menu.js"></script>
     <script src="../js/equipos.js"></script>
 </body>
 </html>

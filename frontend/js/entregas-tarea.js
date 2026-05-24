@@ -53,17 +53,6 @@ function formatearFecha(fecha) {
 }
 
 // ============================================
-// VOLVER A TAREAS
-// ============================================
-function volverATareas() {
-    if (equipoIdActual) {
-        window.location.href = `tareas_equipo.html?equipo_id=${equipoIdActual}`;
-    } else {
-        window.location.href = 'mis_equipos.html';
-    }
-}
-
-// ============================================
 // CARGAR INFORMACIÓN DE LA TAREA Y ENTREGAS
 // ============================================
 async function cargarDatos() {

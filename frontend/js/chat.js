@@ -15,12 +15,6 @@ if (!equipoId) {
     window.location.href = 'mis_equipos.html';
 }
 
-// Configurar volver
-const volverLink = document.getElementById('volverLink');
-if (volverLink) {
-    volverLink.href = `equipo_detalle.html?id=${equipoId}`;
-}
-
 // ============================================
 // ESCAPAR HTML
 // ============================================

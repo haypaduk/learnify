@@ -124,13 +124,6 @@ function formatearFecha(fecha) {
 }
 
 // ============================================
-// VOLVER AL EQUIPO
-// ============================================
-function volverAlEquipo() {
-    window.location.href = `equipo_detalle.html?id=${equipoId}`;
-}
-
-// ============================================
 // INICIALIZAR
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {

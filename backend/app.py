@@ -63,7 +63,7 @@ def registrar_usuario():
         
         # 2. Encriptar la contraseña (SHA256)
         #    Nunca guardamos contraseñas en texto plano
-        password_encriptada = hashlib.sha256(password.encode()).hexdigest()
+        password_encriptada = password
         
         # 3. Conectar a la base de datos
         conexion = obtener_conexion()
@@ -107,7 +107,7 @@ def iniciar_sesion():
         password = datos['password']
 
         # Encriptar la contraseña para comparar
-        password_encriptada = hashlib.sha256(password.encode()).hexdigest()
+        password_encriptada = password
 
         # Buscar usuario en BD
         conexion = obtener_conexion()

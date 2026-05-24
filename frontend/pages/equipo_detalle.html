@@ -10,34 +10,68 @@
     <title>Learnify | Equipo</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/equipo-detalle.css">
+    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
-    <div class="contenedor contenedor-grande">
-        <!-- Botón volver -->
-        <div class="volver" style="margin-bottom: 1rem;">
-            <a href="../pages/mis_equipos.html">← Volver a Mis Equipos</a>
-        </div>
-
-        <!-- Contenedor de contenido (se llena con JS) -->
-        <div id="equipoContent">
-            <div class="sin-equipos">Cargando información del equipo...</div>
-        </div>
-
-        <!-- Modal para agregar miembros (solo líder) -->
-        <div id="modalAgregar" class="modal" style="display: none;">
-            <div class="modal-contenido">
-                <div class="modal-header">
-                    <h3>Agregar miembro</h3>
-                    <button class="modal-cerrar" onclick="cerrarModal()">&times;</button>
-                </div>
-                <p>Para que un alumno se una, comparte este código:</p>
-                <p style="font-size: 2rem; font-weight: bold; text-align: center; background: #f1f5f9; padding: 1rem; border-radius: 12px;" id="equipoIdCodigo"></p>
-                <p style="font-size: 0.8rem; color: #64748b;">El alumno debe ir a "Mis Equipos" → "Unirse a equipo" y escribir este número.</p>
-                <button class="btn primario" style="margin-top: 1rem;" onclick="cerrarModal()">Entendido</button>
+<body class="menu-lateral">
+    <div class="app-container">
+        <!-- ============================================ -->
+        <!-- MENÚ LATERAL                                 -->
+        <!-- ============================================ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i><span> Learnify</span></h2>
             </div>
-        </div>
+            <nav class="sidebar-nav">
+                <a href="../dashboard.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i><span> Dashboard</span>
+                </a>
+                <a href="../pages/mis_equipos.html" class="menu-item">
+                    <i class="fas fa-users"></i><span> Mis Equipos</span>
+                </a>
+                <a href="#" class="menu-item" id="menuCrearEquipo" style="display: none;">
+                    <i class="fas fa-plus-circle"></i><span> Crear Equipo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info-sidebar" id="userInfoSidebar"></div>
+                <button class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL                          -->
+        <!-- ============================================ -->
+        <main class="main-content">
+            <div class="contenedor contenedor-grande">
+                <!-- Contenedor de contenido (se llena con JS) -->
+                <div id="equipoContent">
+                    <div class="sin-equipos">Cargando información del equipo...</div>
+                </div>
+
+                <!-- Modal para agregar miembros (solo líder) -->
+                <div id="modalAgregar" class="modal" style="display: none;">
+                    <div class="modal-contenido">
+                        <div class="modal-header">
+                            <h3>Agregar miembro</h3>
+                            <button class="modal-cerrar" onclick="cerrarModal()">&times;</button>
+                        </div>
+                        <p>Para que un alumno se una, comparte este código:</p>
+                        <p style="font-size: 2rem; font-weight: bold; text-align: center; background: #f1f5f9; padding: 1rem; border-radius: 12px;" id="equipoIdCodigo"></p>
+                        <p style="font-size: 0.8rem; color: #64748b;">El alumno debe ir a "Mis Equipos" → "Unirse a equipo" y escribir este número.</p>
+                        <button class="btn primario" style="margin-top: 1rem;" onclick="cerrarModal()">Entendido</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
+    <!-- ============================================ -->
+    <!-- SCRIPTS                                       -->
+    <!-- ============================================ -->
+    <script src="../js/menu.js"></script>
     <script src="../js/equipo-detalle.js"></script>
 </body>
 </html>
