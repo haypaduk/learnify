@@ -2,7 +2,7 @@
 # ARCHIVO 4/10: SERVIDOR PRINCIPAL (PARTE 1)
 # ============================================
 # Este archivo es el corazón del backend
-# Por ahora solo configuraremos el servidor y rutas básicas
+# Ahora usando MONGODB en lugar de MySQL
 # ============================================
 
 # ============================================
@@ -10,10 +10,13 @@
 # ============================================
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
-import hashlib  # Para encriptar contraseñas
-from config import obtener_conexion  # Nuestro archivo de conexión
+import hashlib  # Para encriptar contraseñas (ya no se usa, pero lo dejamos)
+from mongo_config import get_mongo_connection  # Nuestra conexión a MongoDB
+from bson import ObjectId  # Para manejar IDs de MongoDB
 import os
 from werkzeug.utils import secure_filename
+import gridfs  # Para guardar archivos en MongoDB
+from datetime import datetime
 
 # ============================================
 # CONFIGURACIÓN DEL SERVIDOR
@@ -26,6 +29,36 @@ app = Flask(__name__,
 CORS(app)
 
 # ============================================
+# CONEXIÓN A MONGODB Y GRIDFS
+# ============================================
+db = get_mongo_connection()
+fs = gridfs.GridFS(db)  # Para guardar archivos
+
+# Helper para convertir ObjectId a string en respuestas JSON
+def convertir_objectid(documento):
+    """Convierte los ObjectId de MongoDB a string para JSON (incluyendo listas y documentos anidados)"""
+    if documento is None:
+        return None
+    
+    if isinstance(documento, list):
+        return [convertir_objectid(item) for item in documento]
+    
+    if isinstance(documento, dict):
+        nuevo_doc = {}
+        for key, value in documento.items():
+            if isinstance(value, ObjectId):
+                nuevo_doc[key] = str(value)
+            elif isinstance(value, list):
+                nuevo_doc[key] = [convertir_objectid(item) for item in value]
+            elif isinstance(value, dict):
+                nuevo_doc[key] = convertir_objectid(value)
+            else:
+                nuevo_doc[key] = value
+        return nuevo_doc
+    
+    return documento
+
+# ============================================
 # RUTA DE PRUEBA (para verificar que el servidor funciona)
 # ============================================
 @app.route('/api/test', methods=['GET'])
@@ -35,7 +68,8 @@ def test():
     """
     return jsonify({
         "mensaje": "Servidor funcionando correctamente",
-        "estado": "ok"
+        "estado": "ok",
+        "base_datos": "MongoDB"
     })
 
 
@@ -51,7 +85,7 @@ def test():
 @app.route('/api/registro', methods=['POST'])
 def registrar_usuario():
     """
-    Recibe datos del formulario de registro y guarda en BD
+    Recibe datos del formulario de registro y guarda en MongoDB
     """
     try:
         # 1. Obtener datos que envía el frontend (en formato JSON)
@@ -61,63 +95,57 @@ def registrar_usuario():
         password = datos['password']
         rol = datos['rol']
         
-        # 2. Encriptar la contraseña (SHA256)
-        #    Nunca guardamos contraseñas en texto plano
-        password_encriptada = password
+        # 2. Verificar si el email ya existe
+        if db.usuarios.find_one({"email": email}):
+            return jsonify({
+                "exito": False,
+                "mensaje": "El email ya está registrado"
+            }), 400
         
-        # 3. Conectar a la base de datos
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
+        # 3. Guardar en MongoDB (contraseña en texto plano como solicitaste)
+        nuevo_usuario = {
+            "nombre": nombre,
+            "email": email,
+            "password": password,  # Texto plano
+            "rol": rol,
+            "fecha_registro": datetime.now()
+        }
         
-        # 4. Insertar el nuevo usuario
-        sql = "INSERT INTO usuarios (nombre, email, password, rol) VALUES (%s, %s, %s, %s)"
-        valores = (nombre, email, password_encriptada, rol)
+        resultado = db.usuarios.insert_one(nuevo_usuario)
         
-        cursor.execute(sql, valores)
-        conexion.commit()
-        
-        # 5. Respuesta exitosa (el frontend recibirá esto)
+        # 4. Respuesta exitosa
         return jsonify({
             "exito": True,
-            "mensaje": "Usuario registrado correctamente"
+            "mensaje": "Usuario registrado correctamente",
+            "usuario_id": str(resultado.inserted_id)
         })
         
     except Exception as error:
-        # 6. Si hay error, lo devolvemos al frontend
+        # 5. Si hay error, lo devolvemos al frontend
         return jsonify({
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-        
-    finally:
-        # 7. Siempre cerrar la conexión (aunque haya error)
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 # ============================================
 # API: INICIAR SESIÓN
 # ============================================
 @app.route('/api/iniciar-sesion', methods=['POST'])
 def iniciar_sesion():
+    """
+    Verifica credenciales y devuelve datos del usuario
+    """
     try:
         datos = request.json
         email = datos['email']
         password = datos['password']
 
-        # Encriptar la contraseña para comparar
-        password_encriptada = password
-
-        # Buscar usuario en BD
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
-
-        sql = "SELECT * FROM usuarios WHERE email = %s"
-        cursor.execute(sql, (email,))
-        usuario = cursor.fetchone()
-
-        if usuario and usuario['password'] == password_encriptada:
+        # Buscar usuario en MongoDB
+        usuario = db.usuarios.find_one({"email": email})
+        
+        if usuario and usuario['password'] == password:
+            # Convertir ObjectId a string
+            usuario['_id'] = str(usuario['_id'])
             # No enviar la contraseña al frontend
             del usuario['password']
 
@@ -137,25 +165,21 @@ def iniciar_sesion():
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
+
 
 # ============================================
 # ARCHIVO 12/20: API DE EQUIPOS
 # ============================================
 
 # ============================================
-# API: CREAR EQUIPO (solo maestros)
+# API: CREAR EQUIPO (todos pueden crear equipos)
 # ============================================
 @app.route('/api/equipos/crear', methods=['POST'])
 def crear_equipo():
     """
     Crea un nuevo equipo
-    Solo maestros pueden crear equipos
-    Recibe: nombre, descripcion, lider_id (el maestro que lo crea)
+    Cualquier usuario puede crear equipos
+    Recibe: nombre, descripcion, lider_id (el usuario que lo crea)
     """
     try:
         datos = request.json
@@ -170,23 +194,29 @@ def crear_equipo():
                 "mensaje": "Nombre y líder son obligatorios"
             }), 400
         
-        # Conectar a BD
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
+        # Verificar que el líder existe
+        lider = db.usuarios.find_one({"_id": ObjectId(lider_id)})
+        if not lider:
+            return jsonify({
+                "exito": False,
+                "mensaje": "El líder no existe"
+            }), 404
         
-        # Insertar el equipo
-        sql = "INSERT INTO equipos (nombre, descripcion, lider_id) VALUES (%s, %s, %s)"
-        valores = (nombre, descripcion, lider_id)
+        # Crear el equipo
+        nuevo_equipo = {
+            "nombre": nombre,
+            "descripcion": descripcion,
+            "lider_id": ObjectId(lider_id),
+            "fecha_creacion": datetime.now(),
+            "miembros": []  # Lista de IDs de miembros
+        }
         
-        cursor.execute(sql, valores)
-        conexion.commit()
-        
-        equipo_id = cursor.lastrowid  # Obtener el ID del equipo creado
+        resultado = db.equipos.insert_one(nuevo_equipo)
         
         return jsonify({
             "exito": True,
             "mensaje": "Equipo creado correctamente",
-            "equipo_id": equipo_id
+            "equipo_id": str(resultado.inserted_id)
         })
         
     except Exception as error:
@@ -194,17 +224,11 @@ def crear_equipo():
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
-
 
 # ============================================
 # API: LISTAR EQUIPOS (según rol del usuario)
 # ============================================
-@app.route('/api/equipos/<int:usuario_id>', methods=['GET'])
+@app.route('/api/equipos/<string:usuario_id>', methods=['GET'])
 def listar_equipos(usuario_id):
     """
     Devuelve los equipos según el rol:
@@ -212,12 +236,8 @@ def listar_equipos(usuario_id):
     - Si es alumno: los equipos donde es miembro O líder
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
-        
-        # Primero verificar el rol del usuario
-        cursor.execute("SELECT rol FROM usuarios WHERE id = %s", (usuario_id,))
-        usuario = cursor.fetchone()
+        # Verificar el rol del usuario
+        usuario = db.usuarios.find_one({"_id": ObjectId(usuario_id)})
         
         if not usuario:
             return jsonify({"exito": False, "mensaje": "Usuario no encontrado"}), 404
@@ -225,40 +245,32 @@ def listar_equipos(usuario_id):
         equipos = []
         
         if usuario['rol'] == 'maestro':
-            # Maestro: ver equipos que ha creado
-            sql = """
-                SELECT e.*, 
-                       (SELECT COUNT(*) FROM equipo_miembros WHERE equipo_id = e.id) as total_miembros,
-                       u.nombre as lider_nombre
-                FROM equipos e
-                JOIN usuarios u ON e.lider_id = u.id
-                WHERE e.lider_id = %s 
-                ORDER BY e.fecha_creacion DESC
-            """
-            cursor.execute(sql, (usuario_id,))
-            equipos = cursor.fetchall()
-            
-        else:  # Alumno
-            # Alumno: ver equipos donde es miembro O donde es líder (él lo creó)
-            sql = """
-                SELECT e.*, 
-                       (SELECT COUNT(*) FROM equipo_miembros WHERE equipo_id = e.id) as total_miembros,
-                       (SELECT nombre FROM usuarios WHERE id = e.lider_id) as lider_nombre
-                FROM equipos e 
-                WHERE e.id IN (
-                    SELECT equipo_id FROM equipo_miembros WHERE usuario_id = %s
-                    UNION
-                    SELECT id FROM equipos WHERE lider_id = %s
-                )
-                ORDER BY e.fecha_creacion DESC
-            """
-            cursor.execute(sql, (usuario_id, usuario_id))
-            equipos = cursor.fetchall()
+            cursor = db.equipos.find({"lider_id": ObjectId(usuario_id)})
+        else:
+            cursor = db.equipos.find({
+                "$or": [
+                    {"lider_id": ObjectId(usuario_id)},
+                    {"miembros": ObjectId(usuario_id)}
+                ]
+            })
         
-        # Asegurar que total_miembros sea un número
-        for equipo in equipos:
-            if equipo.get('total_miembros') is None:
-                equipo['total_miembros'] = 0
+        for equipo in cursor:
+            # Convertir manualmente todos los ObjectId a string
+            equipo_data = {
+                "_id": str(equipo["_id"]),
+                "nombre": equipo["nombre"],
+                "descripcion": equipo.get("descripcion", ""),
+                "lider_id": str(equipo["lider_id"]),
+                "fecha_creacion": equipo["fecha_creacion"],
+                "total_miembros": len(equipo.get("miembros", [])),
+                "miembros": [str(m) for m in equipo.get("miembros", [])]
+            }
+            
+            # Obtener nombre del líder
+            lider = db.usuarios.find_one({"_id": ObjectId(equipo_data["lider_id"])})
+            equipo_data["lider_nombre"] = lider["nombre"] if lider else "Desconocido"
+            
+            equipos.append(equipo_data)
         
         return jsonify({
             "exito": True,
@@ -271,11 +283,6 @@ def listar_equipos(usuario_id):
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 # ============================================
 # API: UNIRSE A EQUIPO (solo alumnos)
@@ -297,24 +304,25 @@ def unirse_equipo():
                 "mensaje": "Equipo y usuario son obligatorios"
             }), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
-        
         # Verificar si ya es miembro
-        cursor.execute(
-            "SELECT * FROM equipo_miembros WHERE equipo_id = %s AND usuario_id = %s",
-            (equipo_id, usuario_id)
-        )
-        if cursor.fetchone():
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
+        if not equipo:
+            return jsonify({
+                "exito": False,
+                "mensaje": "El equipo no existe"
+            }), 404
+        
+        if ObjectId(usuario_id) in equipo.get('miembros', []):
             return jsonify({
                 "exito": False,
                 "mensaje": "Ya eres miembro de este equipo"
             }), 400
         
         # Unirse al equipo
-        sql = "INSERT INTO equipo_miembros (equipo_id, usuario_id) VALUES (%s, %s)"
-        cursor.execute(sql, (equipo_id, usuario_id))
-        conexion.commit()
+        db.equipos.update_one(
+            {"_id": ObjectId(equipo_id)},
+            {"$push": {"miembros": ObjectId(usuario_id)}}
+        )
         
         return jsonify({
             "exito": True,
@@ -326,17 +334,12 @@ def unirse_equipo():
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
 # API: VER DETALLE DE UN EQUIPO
 # ============================================
-@app.route('/api/equipos/detalle/<int:equipo_id>', methods=['GET'])
+@app.route('/api/equipos/detalle/<string:equipo_id>', methods=['GET'])
 def detalle_equipo(equipo_id):
     """
     Devuelve la información completa de un equipo:
@@ -345,37 +348,40 @@ def detalle_equipo(equipo_id):
     - Información del líder
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
-        
         # Obtener datos del equipo
-        cursor.execute("""
-            SELECT e.*, u.nombre as lider_nombre, u.email as lider_email
-            FROM equipos e
-            JOIN usuarios u ON e.lider_id = u.id
-            WHERE e.id = %s
-        """, (equipo_id,))
-        equipo = cursor.fetchone()
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
         
         if not equipo:
             return jsonify({"exito": False, "mensaje": "Equipo no encontrado"}), 404
         
-        # Obtener miembros del equipo
-        cursor.execute("""
-            SELECT u.id, u.nombre, u.email, em.fecha_union
-            FROM equipo_miembros em
-            JOIN usuarios u ON em.usuario_id = u.id
-            WHERE em.equipo_id = %s
-            ORDER BY em.fecha_union ASC
-        """, (equipo_id,))
-        miembros = cursor.fetchall()
+        # Obtener información del líder
+        lider = db.usuarios.find_one({"_id": equipo["lider_id"]})
         
-        equipo['miembros'] = miembros
-        equipo['total_miembros'] = len(miembros)
+        # Obtener miembros
+        miembros = []
+        for miembro_id in equipo.get('miembros', []):
+            miembro = db.usuarios.find_one({"_id": miembro_id})
+            if miembro:
+                miembros.append({
+                    "id": str(miembro["_id"]),
+                    "nombre": miembro["nombre"],
+                    "email": miembro["email"]
+                })
+        
+        equipo = convertir_objectid(equipo)
         
         return jsonify({
             "exito": True,
-            "equipo": equipo
+            "equipo": {
+                "id": equipo["_id"],
+                "nombre": equipo["nombre"],
+                "descripcion": equipo["descripcion"],
+                "lider_id": str(equipo["lider_id"]),
+                "lider_nombre": lider["nombre"] if lider else "Desconocido",
+                "fecha_creacion": equipo["fecha_creacion"],
+                "total_miembros": len(miembros),
+                "miembros": miembros
+            }
         })
         
     except Exception as error:
@@ -383,25 +389,19 @@ def detalle_equipo(equipo_id):
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
 # API: ELIMINAR EQUIPO
 # Solo el líder del equipo puede eliminarlo
 # ============================================
-@app.route('/api/equipos/eliminar/<int:equipo_id>', methods=['DELETE'])
+@app.route('/api/equipos/eliminar/<string:equipo_id>', methods=['DELETE'])
 def eliminar_equipo(equipo_id):
     """
     Elimina un equipo y todos sus miembros
     Solo el líder del equipo puede hacerlo
     """
     try:
-        # Obtener el ID del usuario desde la petición (lo enviamos en el body)
         datos = request.json
         usuario_id = datos.get('usuario_id')
         
@@ -411,15 +411,8 @@ def eliminar_equipo(equipo_id):
                 "mensaje": "Usuario no identificado"
             }), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
-        
         # Verificar que el usuario es el líder del equipo
-        cursor.execute(
-            "SELECT lider_id FROM equipos WHERE id = %s",
-            (equipo_id,)
-        )
-        equipo = cursor.fetchone()
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
         
         if not equipo:
             return jsonify({
@@ -427,15 +420,14 @@ def eliminar_equipo(equipo_id):
                 "mensaje": "El equipo no existe"
             }), 404
         
-        if equipo['lider_id'] != usuario_id:
+        if str(equipo["lider_id"]) != usuario_id:
             return jsonify({
                 "exito": False,
                 "mensaje": "No tienes permiso para eliminar este equipo"
             }), 403
         
-        # Eliminar el equipo (los miembros se eliminan automáticamente por ON DELETE CASCADE)
-        cursor.execute("DELETE FROM equipos WHERE id = %s", (equipo_id,))
-        conexion.commit()
+        # Eliminar el equipo
+        db.equipos.delete_one({"_id": ObjectId(equipo_id)})
         
         return jsonify({
             "exito": True,
@@ -447,20 +439,15 @@ def eliminar_equipo(equipo_id):
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
-# API: SALIR DEL EQUIPO (solo para alumnos no líderes)
+# API: SALIR DEL EQUIPO (solo para miembros, no líderes)
 # ============================================
-@app.route('/api/equipos/salir/<int:equipo_id>', methods=['DELETE'])
+@app.route('/api/equipos/salir/<string:equipo_id>', methods=['DELETE'])
 def salir_del_equipo(equipo_id):
     """
-    Permite a un alumno salir de un equipo
+    Permite a un usuario salir de un equipo
     No puede salir si es el líder
     """
     try:
@@ -473,41 +460,33 @@ def salir_del_equipo(equipo_id):
                 "mensaje": "Usuario no identificado"
             }), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
         
-        # Verificar que el usuario es miembro del equipo
-        cursor.execute(
-            "SELECT * FROM equipo_miembros WHERE equipo_id = %s AND usuario_id = %s",
-            (equipo_id, usuario_id)
-        )
-        membresia = cursor.fetchone()
-        
-        if not membresia:
+        if not equipo:
             return jsonify({
                 "exito": False,
-                "mensaje": "No eres miembro de este equipo"
+                "mensaje": "El equipo no existe"
             }), 404
         
         # Verificar que no es el líder
-        cursor.execute(
-            "SELECT lider_id FROM equipos WHERE id = %s",
-            (equipo_id,)
-        )
-        equipo = cursor.fetchone()
-        
-        if equipo and equipo['lider_id'] == usuario_id:
+        if str(equipo["lider_id"]) == usuario_id:
             return jsonify({
                 "exito": False,
                 "mensaje": "Eres el líder del equipo. No puedes salir, solo eliminarlo."
             }), 403
         
-        # Eliminar al usuario de la tabla de miembros
-        cursor.execute(
-            "DELETE FROM equipo_miembros WHERE equipo_id = %s AND usuario_id = %s",
-            (equipo_id, usuario_id)
+        # Verificar que es miembro
+        if ObjectId(usuario_id) not in equipo.get('miembros', []):
+            return jsonify({
+                "exito": False,
+                "mensaje": "No eres miembro de este equipo"
+            }), 404
+        
+        # Eliminar al usuario de la lista de miembros
+        db.equipos.update_one(
+            {"_id": ObjectId(equipo_id)},
+            {"$pull": {"miembros": ObjectId(usuario_id)}}
         )
-        conexion.commit()
         
         return jsonify({
             "exito": True,
@@ -519,11 +498,6 @@ def salir_del_equipo(equipo_id):
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
@@ -553,15 +527,8 @@ def crear_tarea():
                 "mensaje": "Título, equipo y creador son obligatorios"
             }), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
-        
         # Verificar que el creador es el líder del equipo
-        cursor.execute(
-            "SELECT lider_id FROM equipos WHERE id = %s",
-            (equipo_id,)
-        )
-        equipo = cursor.fetchone()
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
         
         if not equipo:
             return jsonify({
@@ -569,28 +536,34 @@ def crear_tarea():
                 "mensaje": "El equipo no existe"
             }), 404
         
-        if equipo[0] != creador_id:
+        if str(equipo["lider_id"]) != creador_id:
             return jsonify({
                 "exito": False,
                 "mensaje": "Solo el líder del equipo puede crear tareas"
             }), 403
         
-        # Insertar tarea
-        sql = """
-            INSERT INTO tareas (titulo, descripcion, equipo_id, creador_id, fecha_limite)
-            VALUES (%s, %s, %s, %s, %s)
-        """
-        valores = (titulo, descripcion, equipo_id, creador_id, fecha_limite)
+        # Convertir fecha límite
+        fecha_limite_obj = None
+        if fecha_limite:
+            fecha_limite_obj = datetime.strptime(fecha_limite, '%Y-%m-%d')
         
-        cursor.execute(sql, valores)
-        conexion.commit()
+        # Crear tarea
+        nueva_tarea = {
+            "titulo": titulo,
+            "descripcion": descripcion,
+            "equipo_id": ObjectId(equipo_id),
+            "creador_id": ObjectId(creador_id),
+            "fecha_limite": fecha_limite_obj,
+            "fecha_creacion": datetime.now(),
+            "archivos_adjuntos": []  # Para archivos que suba el maestro
+        }
         
-        tarea_id = cursor.lastrowid
+        resultado = db.tareas.insert_one(nueva_tarea)
         
         return jsonify({
             "exito": True,
             "mensaje": "Tarea creada correctamente",
-            "tarea_id": tarea_id
+            "tarea_id": str(resultado.inserted_id)
         })
         
     except Exception as error:
@@ -598,35 +571,52 @@ def crear_tarea():
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
 # API: LISTAR TAREAS DE UN EQUIPO
 # ============================================
-@app.route('/api/tareas/equipo/<int:equipo_id>', methods=['GET'])
+@app.route('/api/tareas/equipo/<string:equipo_id>', methods=['GET'])
 def listar_tareas_equipo(equipo_id):
     """
     Devuelve todas las tareas de un equipo
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
+        # Primero obtener el equipo para saber quién es el líder
+        equipo = db.equipos.find_one({"_id": ObjectId(equipo_id)})
+        lider_id = str(equipo["lider_id"]) if equipo else None
         
-        sql = """
-            SELECT t.*, u.nombre as creador_nombre,
-                   (SELECT COUNT(*) FROM entregas WHERE tarea_id = t.id) as total_entregas
-            FROM tareas t
-            JOIN usuarios u ON t.creador_id = u.id
-            WHERE t.equipo_id = %s
-            ORDER BY t.fecha_limite ASC, t.fecha_creacion DESC
-        """
-        cursor.execute(sql, (equipo_id,))
-        tareas = cursor.fetchall()
+        cursor = db.tareas.find({"equipo_id": ObjectId(equipo_id)})
+        
+        tareas = []
+        for tarea in cursor:
+            # Convertir tarea manualmente
+            tarea_data = {
+                "_id": str(tarea["_id"]),
+                "titulo": tarea["titulo"],
+                "descripcion": tarea.get("descripcion", ""),
+                "equipo_id": str(tarea["equipo_id"]),
+                "creador_id": str(tarea["creador_id"]),
+                "fecha_limite": tarea.get("fecha_limite"),
+                "fecha_creacion": tarea["fecha_creacion"],
+                "lider_id": lider_id  # ← NUEVO: ID del líder del equipo
+            }
+            
+            # Obtener nombre del creador
+            creador = db.usuarios.find_one({"_id": tarea["creador_id"]})
+            tarea_data["creador_nombre"] = creador["nombre"] if creador else "Desconocido"
+            
+            # Obtener nombre del equipo
+            equipo_nombre = db.equipos.find_one({"_id": tarea["equipo_id"]})
+            tarea_data["equipo_nombre"] = equipo_nombre["nombre"] if equipo_nombre else "Desconocido"
+            
+            # Contar entregas
+            tarea_data["total_entregas"] = db.entregas.count_documents({"tarea_id": ObjectId(tarea["_id"])})
+            
+            tareas.append(tarea_data)
+        
+        # Ordenar por fecha límite
+        tareas.sort(key=lambda x: x.get('fecha_limite') or datetime.max)
         
         return jsonify({
             "exito": True,
@@ -634,39 +624,22 @@ def listar_tareas_equipo(equipo_id):
         })
         
     except Exception as error:
+        print(f"Error en listar_tareas_equipo: {error}")
         return jsonify({
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
-
-
+    
 # ============================================
 # API: DETALLE DE UNA TAREA
 # ============================================
-@app.route('/api/tareas/detalle/<int:tarea_id>', methods=['GET'])
+@app.route('/api/tareas/detalle/<string:tarea_id>', methods=['GET'])
 def detalle_tarea(tarea_id):
     """
     Devuelve información completa de una tarea y sus entregas
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
-        
-        # Obtener datos de la tarea
-        sql = """
-            SELECT t.*, u.nombre as creador_nombre, e.nombre as equipo_nombre
-            FROM tareas t
-            JOIN usuarios u ON t.creador_id = u.id
-            JOIN equipos e ON t.equipo_id = e.id
-            WHERE t.id = %s
-        """
-        cursor.execute(sql, (tarea_id,))
-        tarea = cursor.fetchone()
+        tarea = db.tareas.find_one({"_id": ObjectId(tarea_id)})
         
         if not tarea:
             return jsonify({
@@ -674,92 +647,120 @@ def detalle_tarea(tarea_id):
                 "mensaje": "Tarea no encontrada"
             }), 404
         
-        # Obtener entregas de la tarea
-        cursor.execute("""
-            SELECT e.*, u.nombre as alumno_nombre
-            FROM entregas e
-            JOIN usuarios u ON e.alumno_id = u.id
-            WHERE e.tarea_id = %s
-            ORDER BY e.fecha_entrega DESC
-        """, (tarea_id,))
-        entregas = cursor.fetchall()
+        # Obtener el equipo para saber quién es el líder
+        equipo = db.equipos.find_one({"_id": tarea["equipo_id"]})
         
-        tarea['entregas'] = entregas
+        # Convertir tarea manualmente
+        tarea_data = {
+            "_id": str(tarea["_id"]),
+            "titulo": tarea["titulo"],
+            "descripcion": tarea.get("descripcion", ""),
+            "equipo_id": str(tarea["equipo_id"]),
+            "creador_id": str(tarea["creador_id"]),
+            "fecha_limite": tarea.get("fecha_limite"),
+            "fecha_creacion": tarea["fecha_creacion"],
+            "lider_id": str(equipo["lider_id"]) if equipo else None  # ← NUEVO: ID del líder del equipo
+        }
+        
+        # Obtener nombre del creador
+        creador = db.usuarios.find_one({"_id": tarea["creador_id"]})
+        tarea_data["creador_nombre"] = creador["nombre"] if creador else "Desconocido"
+        
+        # Obtener nombre del equipo
+        tarea_data["equipo_nombre"] = equipo["nombre"] if equipo else "Desconocido"
+        
+        # Obtener entregas
+        entregas = []
+        cursor = db.entregas.find({"tarea_id": ObjectId(tarea_id)})
+        for entrega in cursor:
+            entrega_data = {
+                "_id": str(entrega["_id"]),
+                "tarea_id": str(entrega["tarea_id"]),
+                "alumno_id": str(entrega["alumno_id"]),
+                "comentario": entrega.get("comentario", ""),
+                "archivo_id": str(entrega["archivo_id"]) if entrega.get("archivo_id") else None,
+                "nombre_archivo": entrega.get("nombre_archivo"),
+                "calificacion": entrega.get("calificacion"),
+                "fecha_entrega": entrega["fecha_entrega"]
+            }
+            
+            # Obtener nombre del alumno
+            alumno = db.usuarios.find_one({"_id": entrega["alumno_id"]})
+            entrega_data["alumno_nombre"] = alumno["nombre"] if alumno else "Desconocido"
+            
+            entregas.append(entrega_data)
+        
+        tarea_data["entregas"] = entregas
         
         return jsonify({
             "exito": True,
-            "tarea": tarea
+            "tarea": tarea_data
         })
         
     except Exception as error:
+        print(f"Error en detalle_tarea: {error}")
         return jsonify({
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
-
-
+    
 # ============================================
-# API: CREAR ENTREGA (alumno)
+# API: ENTREGAR TAREA (con GridFS para archivos)
 # ============================================
-@app.route('/api/entregas/crear', methods=['POST'])
-def crear_entrega():
-    """
-    Permite a un alumno entregar una tarea
-    """
+@app.route('/api/entregas/subir', methods=['POST'])
+def subir_archivo_entrega():
+    """Sube un archivo para una entrega usando GridFS de MongoDB"""
     try:
-        datos = request.json
-        tarea_id = datos.get('tarea_id')
-        alumno_id = datos.get('alumno_id')
-        comentario = datos.get('comentario', '')
+        tarea_id = request.form.get('tarea_id')
+        alumno_id = request.form.get('alumno_id')
+        comentario = request.form.get('comentario', '')
         
         if not tarea_id or not alumno_id:
-            return jsonify({
-                "exito": False,
-                "mensaje": "Tarea y alumno son obligatorios"
-            }), 400
-        
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
+            return jsonify({"exito": False, "mensaje": "Faltan datos"}), 400
         
         # Verificar si ya entregó
-        cursor.execute(
-            "SELECT * FROM entregas WHERE tarea_id = %s AND alumno_id = %s",
-            (tarea_id, alumno_id)
-        )
-        if cursor.fetchone():
-            return jsonify({
-                "exito": False,
-                "mensaje": "Ya has entregado esta tarea"
-            }), 400
+        entrega_existente = db.entregas.find_one({
+            "tarea_id": ObjectId(tarea_id),
+            "alumno_id": ObjectId(alumno_id)
+        })
         
-        # Insertar entrega
-        sql = """
-            INSERT INTO entregas (tarea_id, alumno_id, comentario)
-            VALUES (%s, %s, %s)
-        """
-        cursor.execute(sql, (tarea_id, alumno_id, comentario))
-        conexion.commit()
+        if entrega_existente:
+            return jsonify({"exito": False, "mensaje": "Ya entregaste esta tarea"}), 400
+        
+        # Procesar archivo con GridFS
+        archivo = request.files.get('archivo')
+        archivo_id = None
+        nombre_archivo = None
+        
+        if archivo:
+            nombre_archivo = secure_filename(archivo.filename)
+            # Guardar en GridFS
+            archivo_id = fs.put(
+                archivo.read(),
+                filename=nombre_archivo,
+                content_type=archivo.content_type
+            )
+        
+        # Crear entrega
+        nueva_entrega = {
+            "tarea_id": ObjectId(tarea_id),
+            "alumno_id": ObjectId(alumno_id),
+            "comentario": comentario,
+            "archivo_id": archivo_id,  # ID del archivo en GridFS
+            "nombre_archivo": nombre_archivo,
+            "calificacion": None,
+            "fecha_entrega": datetime.now()
+        }
+        
+        db.entregas.insert_one(nueva_entrega)
         
         return jsonify({
             "exito": True,
-            "mensaje": "Tarea entregada correctamente"
+            "mensaje": "Tarea entregada con éxito"
         })
         
     except Exception as error:
-        return jsonify({
-            "exito": False,
-            "mensaje": f"Error: {str(error)}"
-        }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
+        return jsonify({"exito": False, "mensaje": str(error)}), 400
 
 
 # ============================================
@@ -787,13 +788,11 @@ def calificar_entrega():
                 "mensaje": "La calificación debe estar entre 0 y 100"
             }), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
-        
         # Actualizar calificación
-        sql = "UPDATE entregas SET calificacion = %s WHERE id = %s"
-        cursor.execute(sql, (calificacion, entrega_id))
-        conexion.commit()
+        db.entregas.update_one(
+            {"_id": ObjectId(entrega_id)},
+            {"$set": {"calificacion": calificacion}}
+        )
         
         return jsonify({
             "exito": True,
@@ -805,65 +804,60 @@ def calificar_entrega():
             "exito": False,
             "mensaje": f"Error: {str(error)}"
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
 
 
 # ============================================
 # API: TAREAS PENDIENTES DEL ALUMNO (para dashboard)
 # ============================================
-@app.route('/api/tareas/alumno/<int:alumno_id>', methods=['GET'])
+@app.route('/api/tareas/alumno/<string:alumno_id>', methods=['GET'])
 def tareas_alumno(alumno_id):
     """
     Devuelve las tareas pendientes de un alumno
-    (tareas de equipos donde es miembro y que no ha entregado)
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
+        # Obtener equipos donde el alumno es miembro o líder
+        equipos = db.equipos.find({
+            "$or": [
+                {"lider_id": ObjectId(alumno_id)},
+                {"miembros": ObjectId(alumno_id)}
+            ]
+        })
         
-        # Primero, obtener los equipos donde el alumno es miembro
-        cursor.execute("""
-            SELECT equipo_id FROM equipo_miembros WHERE usuario_id = %s
-            UNION
-            SELECT id FROM equipos WHERE lider_id = %s
-        """, (alumno_id, alumno_id))
-        equipos = cursor.fetchall()
+        equipos_ids = [equipo["_id"] for equipo in equipos]
         
-        if not equipos:
-            return jsonify({
-                "exito": True,
-                "tareas": []
-            })
-        
-        # Crear lista de IDs de equipos
-        equipos_ids = [str(e['equipo_id']) for e in equipos]
-        equipos_str = ','.join(equipos_ids)
+        if not equipos_ids:
+            return jsonify({"exito": True, "tareas": []})
         
         # Obtener tareas de esos equipos que el alumno no ha entregado
-        sql = f"""
-            SELECT t.*, e.nombre as equipo_nombre,
-                   CASE 
-                       WHEN t.fecha_limite < CURDATE() THEN 'vencida'
-                       ELSE 'pendiente'
-                   END as estado_tarea
-            FROM tareas t
-            JOIN equipos e ON t.equipo_id = e.id
-            WHERE t.equipo_id IN ({equipos_str})
-            AND t.id NOT IN (
-                SELECT tarea_id FROM entregas WHERE alumno_id = %s
-            )
-            ORDER BY t.fecha_limite ASC, t.fecha_creacion DESC
-        """
-        cursor.execute(sql, (alumno_id,))
-        tareas = cursor.fetchall()
+        tareas_pendientes = []
+        entregas_realizadas = [e["tarea_id"] for e in db.entregas.find({"alumno_id": ObjectId(alumno_id)})]
+        
+        cursor = db.tareas.find({
+            "equipo_id": {"$in": equipos_ids},
+            "_id": {"$nin": entregas_realizadas}
+        })
+        
+        for tarea in cursor:
+            # Obtener el equipo para saber quién es el líder
+            equipo = db.equipos.find_one({"_id": tarea["equipo_id"]})
+            
+            tarea_data = {
+                "_id": str(tarea["_id"]),
+                "titulo": tarea["titulo"],
+                "descripcion": tarea.get("descripcion", ""),
+                "equipo_id": str(tarea["equipo_id"]),
+                "creador_id": str(tarea["creador_id"]),
+                "fecha_limite": tarea.get("fecha_limite"),
+                "fecha_creacion": tarea["fecha_creacion"],
+                "lider_id": str(equipo["lider_id"]) if equipo else None,  # ← NUEVO
+                "equipo_nombre": equipo["nombre"] if equipo else "Desconocido"
+            }
+            
+            tareas_pendientes.append(tarea_data)
         
         return jsonify({
             "exito": True,
-            "tareas": tareas
+            "tareas": tareas_pendientes
         })
         
     except Exception as error:
@@ -872,36 +866,40 @@ def tareas_alumno(alumno_id):
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
-            
-
+    
 # ============================================
-# API: TAREAS RECIENTES DEL EQUIPO (para líder en dashboard)
+# API: TAREAS RECIENTES DEL LÍDER (para dashboard)
 # ============================================
-@app.route('/api/tareas/lider/<int:lider_id>', methods=['GET'])
+@app.route('/api/tareas/lider/<string:lider_id>', methods=['GET'])
 def tareas_lider(lider_id):
     """
     Devuelve las tareas de los equipos que lidera un usuario
     """
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
+        # Obtener equipos donde es líder
+        equipos = db.equipos.find({"lider_id": ObjectId(lider_id)})
+        equipos_ids = [equipo["_id"] for equipo in equipos]
         
-        sql = """
-            SELECT t.*, e.nombre as equipo_nombre,
-                   (SELECT COUNT(*) FROM entregas WHERE tarea_id = t.id) as total_entregas
-            FROM tareas t
-            JOIN equipos e ON t.equipo_id = e.id
-            WHERE e.lider_id = %s
-            ORDER BY t.fecha_creacion DESC
-            LIMIT 10
-        """
-        cursor.execute(sql, (lider_id,))
-        tareas = cursor.fetchall()
+        tareas = []
+        cursor = db.tareas.find({"equipo_id": {"$in": equipos_ids}}).sort("fecha_creacion", -1).limit(10)
+        
+        for tarea in cursor:
+            # Convertir manualmente
+            tarea_data = {
+                "_id": str(tarea["_id"]),
+                "titulo": tarea["titulo"],
+                "descripcion": tarea.get("descripcion", ""),
+                "equipo_id": str(tarea["equipo_id"]),
+                "creador_id": str(tarea["creador_id"]),
+                "fecha_limite": tarea.get("fecha_limite"),
+                "fecha_creacion": tarea["fecha_creacion"],
+                "total_entregas": db.entregas.count_documents({"tarea_id": tarea["_id"]})
+            }
+            
+            equipo = db.equipos.find_one({"_id": tarea["equipo_id"]})
+            tarea_data["equipo_nombre"] = equipo["nombre"] if equipo else "Desconocido"
+            
+            tareas.append(tarea_data)
         
         return jsonify({
             "exito": True,
@@ -914,35 +912,35 @@ def tareas_lider(lider_id):
             "exito": False,
             "mensaje": str(error)
         }), 400
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conexion' in locals():
-            conexion.close()
-
 
 # ============================================
 # API: CHAT DEL EQUIPO
 # ============================================
 
 # Obtener mensajes de un equipo
-@app.route('/api/chat/<int:equipo_id>', methods=['GET'])
+@app.route('/api/chat/<string:equipo_id>', methods=['GET'])
 def obtener_mensajes(equipo_id):
     """Devuelve todos los mensajes de un equipo"""
     try:
-        conexion = obtener_conexion()
-        cursor = conexion.cursor(dictionary=True)
+        # Convertir equipo_id a ObjectId
+        from bson import ObjectId
+        equipo_obj_id = ObjectId(equipo_id)
         
-        sql = """
-            SELECT m.*, u.nombre as usuario_nombre, u.rol
-            FROM mensajes_chat m
-            JOIN usuarios u ON m.usuario_id = u.id
-            WHERE m.equipo_id = %s
-            ORDER BY m.fecha_envio ASC
-            LIMIT 100
-        """
-        cursor.execute(sql, (equipo_id,))
-        mensajes = cursor.fetchall()
+        cursor = db.mensajes_chat.find({"equipo_id": equipo_obj_id}).sort("fecha_envio", 1).limit(100)
+        
+        mensajes = []
+        for msg in cursor:
+            # Convertir ObjectId a string
+            msg['_id'] = str(msg['_id'])
+            msg['equipo_id'] = str(msg['equipo_id'])
+            msg['usuario_id'] = str(msg['usuario_id'])
+            
+            # Obtener información del usuario
+            usuario = db.usuarios.find_one({"_id": ObjectId(msg['usuario_id'])})
+            msg['usuario_nombre'] = usuario['nombre'] if usuario else "Desconocido"
+            msg['rol'] = usuario['rol'] if usuario else "alumno"
+            
+            mensajes.append(msg)
         
         return jsonify({
             "exito": True,
@@ -950,11 +948,8 @@ def obtener_mensajes(equipo_id):
         })
         
     except Exception as error:
+        print(f"Error en obtener_mensajes: {error}")
         return jsonify({"exito": False, "mensaje": str(error)}), 400
-    finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conexion' in locals(): conexion.close()
-
 
 # Enviar mensaje a un equipo
 @app.route('/api/chat/enviar', methods=['POST'])
@@ -964,17 +959,21 @@ def enviar_mensaje():
         datos = request.json
         equipo_id = datos.get('equipo_id')
         usuario_id = datos.get('usuario_id')
-        mensaje = datos.get('mensaje', '').strip()
+        mensaje_texto = datos.get('mensaje', '').strip()
         
-        if not mensaje:
+        if not mensaje_texto:
             return jsonify({"exito": False, "mensaje": "El mensaje no puede estar vacío"}), 400
         
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
+        from bson import ObjectId
         
-        sql = "INSERT INTO mensajes_chat (equipo_id, usuario_id, mensaje) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (equipo_id, usuario_id, mensaje))
-        conexion.commit()
+        nuevo_mensaje = {
+            "equipo_id": ObjectId(equipo_id),
+            "usuario_id": ObjectId(usuario_id),
+            "mensaje": mensaje_texto,
+            "fecha_envio": datetime.now()
+        }
+        
+        db.mensajes_chat.insert_one(nuevo_mensaje)
         
         return jsonify({
             "exito": True,
@@ -982,91 +981,21 @@ def enviar_mensaje():
         })
         
     except Exception as error:
+        print(f"Error en enviar_mensaje: {error}")
         return jsonify({"exito": False, "mensaje": str(error)}), 400
-    finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conexion' in locals(): conexion.close()
-
 
 # ============================================
-# API: SUBIR ARCHIVO (entrega de tarea)
+# RUTA PARA SERVIR ARCHIVOS DESDE GRIDFS
 # ============================================
-import os
-from werkzeug.utils import secure_filename
-
-# Configurar carpeta de uploads
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'doc', 'docx', 'txt'}
-
-# Crear carpeta si no existe
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/api/entregas/subir', methods=['POST'])
-def subir_archivo_entrega():
-    """Sube un archivo para una entrega"""
+@app.route('/api/archivos/<string:archivo_id>')
+def servir_archivo_gridfs(archivo_id):
+    """Sirve archivos almacenados en GridFS"""
     try:
-        tarea_id = request.form.get('tarea_id')
-        alumno_id = request.form.get('alumno_id')
-        comentario = request.form.get('comentario', '')
-        
-        if not tarea_id or not alumno_id:
-            return jsonify({"exito": False, "mensaje": "Faltan datos"}), 400
-        
-        # Procesar archivo
-        archivo = request.files.get('archivo')
-        nombre_archivo = None
-        ruta_archivo = None
-        
-        if archivo and allowed_file(archivo.filename):
-            nombre_archivo = secure_filename(archivo.filename)
-            # Renombrar para evitar duplicados
-            import time
-            nombre_unico = f"{int(time.time())}_{nombre_archivo}"
-            ruta_archivo = os.path.join(UPLOAD_FOLDER, nombre_unico)
-            archivo.save(ruta_archivo)
-        
-        conexion = obtener_conexion()
-        cursor = conexion.cursor()
-        
-        # Verificar si ya entregó
-        cursor.execute(
-            "SELECT id FROM entregas WHERE tarea_id = %s AND alumno_id = %s",
-            (tarea_id, alumno_id)
-        )
-        if cursor.fetchone():
-            return jsonify({"exito": False, "mensaje": "Ya entregaste esta tarea"}), 400
-        
-        # Insertar entrega con archivo
-        sql = """
-            INSERT INTO entregas (tarea_id, alumno_id, comentario, archivo, nombre_archivo)
-            VALUES (%s, %s, %s, %s, %s)
-        """
-        cursor.execute(sql, (tarea_id, alumno_id, comentario, ruta_archivo, nombre_archivo))
-        conexion.commit()
-        
-        return jsonify({
-            "exito": True,
-            "mensaje": "Tarea entregada con éxito"
-        })
-        
+        archivo = fs.get(ObjectId(archivo_id))
+        from flask import Response
+        return Response(archivo.read(), mimetype=archivo.content_type)
     except Exception as error:
-        return jsonify({"exito": False, "mensaje": str(error)}), 400
-    finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conexion' in locals(): conexion.close()
-
-
-# ============================================
-# RUTA PARA SERVIR ARCHIVOS SUBIDOS
-# ============================================
-@app.route('/uploads/<path:nombre_archivo>')
-def servir_archivo(nombre_archivo):
-    """Sirve archivos subidos por los alumnos"""
-    return send_from_directory('uploads', nombre_archivo)
+        return jsonify({"error": "Archivo no encontrado"}), 404
 
 
 # ============================================
@@ -1079,11 +1008,14 @@ def servir_archivo(nombre_archivo):
 # ============================================
 if __name__ == '__main__':
     print("\n" + "="*50)
-    print("SERVIDOR INICIADO")
+    print("🚀 SERVIDOR INICIADO CON MONGODB")
     print("="*50)
-    print("Rutas disponibles:")
+    print("📁 Base de datos: MongoDB")
+    print("📁 Archivos: GridFS")
+    print("🌐 Rutas disponibles:")
     print("   • http://localhost:5000/api/test  (para probar)")
-    print("\n Presiona CTRL+C para detener el servidor")
+    print("\n🔧 Presiona CTRL+C para detener el servidor")
     print("="*50 + "\n")
     
-    app.run(debug=True, port=5000)
+    # Usar use_reloader=False para evitar errores de socket en Windows
+    app.run(debug=True, use_reloader=False, port=5000)

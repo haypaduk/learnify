@@ -1,6 +1,6 @@
 // ============================================
-// ARCHIVO 21/30: tareas.js
-// Lógica para gestionar tareas
+// ARCHIVO: tareas.js
+// Lógica para gestionar tareas (MongoDB)
 // ============================================
 
 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -23,7 +23,7 @@ if (!equipoId) {
 // ============================================
 async function cargarTareas() {
     const container = document.getElementById('tareasContainer');
-    container.innerHTML = '<div class="sin-tareas">Cargando tareas...</div>';
+    container.innerHTML = '<div class="sin-tareas"><i class="fas fa-spinner fa-pulse"></i> Cargando tareas...</div>';
     
     try {
         const respuesta = await fetch(`/api/tareas/equipo/${equipoId}`);
@@ -32,10 +32,11 @@ async function cargarTareas() {
         if (resultado.exito) {
             mostrarTareas(resultado.tareas);
         } else {
-            container.innerHTML = `<div class="sin-tareas">Error: ${resultado.mensaje}</div>`;
+            container.innerHTML = `<div class="sin-tareas"><i class="fas fa-exclamation-triangle"></i> Error: ${resultado.mensaje}</div>`;
         }
     } catch (error) {
-        container.innerHTML = '<div class="sin-tareas">Error de conexión</div>';
+        console.error('Error:', error);
+        container.innerHTML = '<div class="sin-tareas"><i class="fas fa-wifi"></i> Error de conexión</div>';
     }
 }
 
@@ -46,33 +47,36 @@ function mostrarTareas(tareas) {
     const container = document.getElementById('tareasContainer');
     
     if (tareas.length === 0) {
-        container.innerHTML = '<div class="sin-tareas">No hay tareas en este equipo. Crea una para empezar.</div>';
+        container.innerHTML = '<div class="sin-tareas"><i class="fas fa-inbox"></i> No hay tareas en este equipo. Crea una para empezar.</div>';
         return;
     }
     
     container.innerHTML = tareas.map(tarea => {
-        const fechaLimite = new Date(tarea.fecha_limite);
+        const fechaLimite = tarea.fecha_limite ? new Date(tarea.fecha_limite) : null;
         const hoy = new Date();
-        const estaVencida = fechaLimite < hoy && tarea.fecha_limite;
-        const esLider = usuario.rol === 'maestro' || tarea.creador_id === usuario.id;
+        const estaVencida = fechaLimite && fechaLimite < hoy;
+        
+        const esLiderDeEsteEquipo = tarea.lider_id === usuario._id;
         
         return `
             <div class="tarea-card">
-                <div class="tarea-titulo">Titulo: ${escapeHtml(tarea.titulo)}</div>
-                <div class="tarea-descripcion">${escapeHtml(tarea.descripcion || 'Sin descripción')}</div>
+                <div class="tarea-titulo"><i class="fas fa-tasks"></i> Título: ${escapeHtml(tarea.titulo)}</div>
+                <div class="tarea-descripcion"><i class="fas fa-align-left"></i> ${escapeHtml(tarea.descripcion || 'Sin descripción')}</div>
                 <div class="tarea-meta">
                     <div class="tarea-fecha ${estaVencida ? 'vencida' : ''}">
-                        Fecha: ${tarea.fecha_limite ? formatearFecha(tarea.fecha_limite) : 'Sin fecha límite'}
+                        <i class="fas fa-calendar-alt"></i> Fecha: ${tarea.fecha_limite ? formatearFecha(tarea.fecha_limite) : 'Sin fecha límite'}
                     </div>
-                    <div class="tarea-creador">Creador: ${escapeHtml(tarea.creador_nombre)}</div>
-                    <div class="entregas-badge">Entrego: ${tarea.total_entregas || 0} entregas</div>
+                    <div class="tarea-creador"><i class="fas fa-user"></i> Creador: ${escapeHtml(tarea.creador_nombre)}</div>
+                    <div class="entregas-badge"><i class="fas fa-paperclip"></i> ${tarea.total_entregas || 0} entregas</div>
                 </div>
                 <div class="tarea-acciones">
-                    <button onclick="verDetalleTarea(${tarea.id})" class="btn btn-ver-tarea">Ver detalles</button>
-                    ${usuario.rol === 'alumno' ? 
-                        `<button onclick="entregarTarea(${tarea.id})" class="btn btn-entregar">Entregar</button>` : ''}
-                    ${esLider ? 
-                        `<button onclick="verEntregas(${tarea.id})" class="btn btn-calificar">Calificar</button>` : ''}
+                    <button onclick="verDetalleTarea('${tarea._id}')" class="btn btn-ver-tarea"><i class="fas fa-eye"></i> Ver detalles</button>
+                    
+                    ${!esLiderDeEsteEquipo ? 
+                        `<button onclick="entregarTarea('${tarea._id}')" class="btn btn-entregar"><i class="fas fa-upload"></i> Entregar</button>` : ''}
+                    
+                    ${esLiderDeEsteEquipo ? 
+                        `<button onclick="verEntregas('${tarea._id}')" class="btn btn-calificar"><i class="fas fa-star"></i> Calificar</button>` : ''}
                 </div>
             </div>
         `;
@@ -83,7 +87,7 @@ function mostrarTareas(tareas) {
 // VER DETALLE DE TAREA
 // ============================================
 function verDetalleTarea(tareaId) {
-    window.location.href = `detalle_tarea.html?id=${tareaId}`;
+    window.location.href = `detalle_tarea.html?id=${tareaId}&equipo_id=${equipoId}`;
 }
 
 // ============================================
@@ -129,10 +133,8 @@ function formatearFecha(fecha) {
 document.addEventListener('DOMContentLoaded', function() {
     cargarTareas();
     
-    // Configurar botón crear tarea (solo líder)
     const btnCrear = document.getElementById('btnCrearTarea');
     if (btnCrear) {
-        // Solo mostrar si es líder del equipo (lo verificamos en backend)
         btnCrear.onclick = crearTarea;
     }
 });

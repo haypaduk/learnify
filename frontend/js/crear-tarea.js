@@ -1,6 +1,6 @@
 // ============================================
 // ARCHIVO: crear-tarea.js
-// Lógica para crear una nueva tarea
+// Lógica para crear una nueva tarea (MongoDB)
 // ============================================
 
 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -30,7 +30,7 @@ if (volverLink) {
 function mostrarMensaje(tipo, texto) {
     const mensajeDiv = document.getElementById('mensaje');
     mensajeDiv.className = `mensaje ${tipo}`;
-    mensajeDiv.textContent = tipo === 'exito' ? `Correcto ${texto}` : `Error ${texto}`;
+    mensajeDiv.textContent = tipo === 'exito' ? `Correcto: ${texto}` : `Error: ${texto}`;
     mensajeDiv.style.display = 'block';
     setTimeout(() => {
         mensajeDiv.style.display = 'none';
@@ -71,8 +71,10 @@ document.getElementById('formCrearTarea').addEventListener('submit', async funct
             body: JSON.stringify({
                 titulo: titulo,
                 descripcion: descripcion,
-                equipo_id: parseInt(equipoId),
-                creador_id: usuario.id,
+                // CAMBIO: ya no usar parseInt, equipoId es string
+                equipo_id: equipoId,
+                // CAMBIO: usuario.id → usuario._id
+                creador_id: usuario._id,
                 fecha_limite: fecha_limite || null
             })
         });
@@ -91,6 +93,7 @@ document.getElementById('formCrearTarea').addEventListener('submit', async funct
         }
 
     } catch (error) {
+        console.error('Error:', error);
         mostrarMensaje('error', 'Error de conexión');
         btnSubmit.textContent = textoOriginal;
         btnSubmit.disabled = false;

@@ -47,26 +47,37 @@
         <main class="main-content">
             <div class="contenedor contenedor-grande">
                 <div class="header-equipos">
-                    <h2>Mis Equipos</h2>
+                    <h2><i class="fas fa-users"></i> Mis Equipos</h2>
                     <div>
-                        <button id="btnMostrarUnirse" class="btn secundario" style="margin-right: 10px;">Unirse a equipo</button>
-                        <button id="btnCrearEquipo" class="btn primario btn-crear">Crear equipo</button>
+                        <button id="btnMostrarUnirse" class="btn secundario" style="margin-right: 10px;">
+                            <i class="fas fa-user-plus"></i> Unirse a equipo
+                        </button>
+                        <button id="btnCrearEquipo" class="btn primario btn-crear">
+                            <i class="fas fa-plus-circle"></i> Crear equipo
+                        </button>
                     </div>
                 </div>
                 
                 <div id="mensaje" class="mensaje"></div>
                 
                 <div id="formUnirse" class="form-unirse">
-                    <h3 style="margin-bottom: 1rem;">Unirse a equipo</h3>
+                    <h3 style="margin-bottom: 1rem;"><i class="fas fa-door-open"></i> Unirse a equipo</h3>
                     <div class="form-group">
-                        <input type="text" id="codigoEquipo" placeholder="ID del equipo (número)" required>
+                        <i class="fas fa-qrcode"></i>
+                        <input type="text" id="codigoEquipo" placeholder="ID del equipo" required>
                     </div>
-                    <button id="btnConfirmarUnirse" class="btn primario">Confirmar</button>
-                    <button id="btnCancelarUnirse" class="btn secundario" style="margin-top: 0;">Cancelar</button>
+                    <button id="btnConfirmarUnirse" class="btn primario">
+                        <i class="fas fa-check"></i> Confirmar
+                    </button>
+                    <button id="btnCancelarUnirse" class="btn secundario" style="margin-top: 0;">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
                 </div>
                 
                 <div id="equiposContainer" class="equipos-grid">
-                    <div class="sin-equipos">Cargando equipos...</div>
+                    <div class="sin-equipos">
+                        <i class="fas fa-folder-open"></i> Cargando equipos...
+                    </div>
                 </div>
             </div>
         </main>

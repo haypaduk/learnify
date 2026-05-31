@@ -1,13 +1,14 @@
 <!DOCTYPE html> <!-- Indica el lenguaje a HTML5 ultima version en los navegadores.-->
-<html lang = "es"> <!--lang = "es" = pagina en español.-->
-<head> <!--- Son configuraciones q no saldran en la pagina, es como tener algo dentro de datos sin q se vean de configuraciones. --->
-    <meta charset="UTF-8"> <!--- Para usar ñ y tildes. -->
+<html lang="es"> <!--lang = "es" = pagina en español.-->
+<head> <!-- Son configuraciones q no saldran en la pagina, es como tener algo dentro de datos sin q se vean de configuraciones. -->
+    <meta charset="UTF-8"> <!-- Para usar ñ y tildes. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para moviles-->
     <title> Learnify | Registrarse </title> <!-- Titulo de la pestaña. -->
 
     <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/animaciones_login_registro.css"> <!-- Estilos de animación -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Iconos Font Awesome -->
 </head>
-
 
 <body> <!-- Todo lo q se coloque dentro, se mostrara en el navegador o pagina. -->
     <div class="contenedor"> <!-- "división", es como una caja que agrupa contenido
@@ -18,37 +19,58 @@
          - Sombra
          - Ancho máximo de 400px-->
 
-         <h2> Crear cuenta.</h2> <!-- Encabezado nivel 2, se coloca lo q se quiera dar a entender.-->
-    <div id="mensaje" class="mensaje"></div> <!-- id="mensaje" es el identificador unico, class="mensaje" son la clase de los estilos del CSS. -->
+        <h2><i class="fas fa-user-plus"></i> Crear cuenta.</h2> <!-- Encabezado nivel 2, se coloca lo q se quiera dar a entender.-->
+        
+        <div id="mensaje" class="mensaje"></div> <!-- id="mensaje" es el identificador unico, class="mensaje" son la clase de los estilos del CSS. -->
 
-    <form id="formulario-registro"> <!-- <form> = Crea un formulario id="formulario-registro" = para que JavaScript lo encuentre. -->
+        <form id="formulario-registro"> <!-- <form> = Crea un formulario id="formulario-registro" = para que JavaScript lo encuentre. -->
 
-    <input type="text" id="nombre" placeholder="Nombre Completo" required> <!-- Campo de texto - Nombre -->
-    <input type="email" id="email" placeholder="Escribe tu correo" required> <!-- Campo de correo - Correo -->
-    <input type="password" id="password" placeholder="Escribe tu contraseña" required> <!-- Campo paracontraseña - Contraseña -->
-    
-    <select id="rol" required> <!-- Selector de roles - Rol -->
-    <option value="">Selecciona tu Rol.</option>
-    <option value="maestro">Maestro/Lider de Equipo</option>
-    <option value="alumno">Alumno/Miembro de Equipo</option>
-    </select>
+            <!-- Campo de texto - Nombre con icono -->
+            <div class="campo-animado input-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="nombre" placeholder="Nombre Completo" required>
+            </div>
 
-    <button type="submit" class="btn primario btn-block">Registrarse</button> <!-- type="submit" = al hacer click, envia formulario, 
-    class="btn primario btn-block" = estilos del CSS. -->
+            <!-- Campo de correo - Correo con icono -->
+            <div class="campo-animado input-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Escribe tu correo" required>
+            </div>
 
-    </form>
+            <!-- Campo para contraseña - Contraseña con icono -->
+            <div class="campo-animado input-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Escribe tu contraseña" required>
+            </div>
 
-    <div class="enlace-rapido">
-        ¿Ya tienes cuenta?<a href="iniciar_sesion.html">Iniciar sesión</a> <!-- Enlace a otra pagina. -->
+            <!-- Selector de roles - Rol con icono (los emojis están bien aquí) -->
+            <div class="campo-animado input-icon">
+                <i class="fas fa-user-tag"></i>
+                <select id="rol" required>
+                    <option value="">Selecciona tu Rol.</option>
+                    <option value="maestro">👨‍🏫 Maestro / Líder de Equipo</option>
+                    <option value="alumno">👨‍🎓 Alumno / Miembro de Equipo</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn primario btn-block"> <!-- type="submit" = al hacer click, envia formulario, 
+            class="btn primario btn-block" = estilos del CSS. -->
+                <i class="fas fa-paper-plane"></i> Registrarse
+            </button>
+
+        </form>
+
+        <div class="enlace-rapido">
+            ¿Ya tienes cuenta? <a href="iniciar_sesion.html">Iniciar sesión</a> <!-- Enlace a otra pagina. -->
+        </div>
+
+        <div class="volver">
+            <a href="bienvenida.html"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+        </div>
+
     </div>
 
-    <div class="volver">
-        <a href="bienvenida.html">← Volver al inicio</a>
-    </div>
-
-</div>
-
-<script src="js/autenticacion.js"></script>
+    <script src="js/autenticacion.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 // ============================================
-// CHAT DEL EQUIPO - VERSIÓN SIMPLIFICADA
+// CHAT DEL EQUIPO - VERSIÓN MONGODB CON ICONOS
 // ============================================
 
 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -45,7 +45,7 @@ async function cargarMensajes() {
         console.log('Respuesta recibida:', resultado);
         
         if (!resultado.exito) {
-            container.innerHTML = '<div class="empty-message">❌ Error al cargar mensajes</div>';
+            container.innerHTML = '<div class="empty-message"><i class="fas fa-exclamation-triangle"></i> Error al cargar mensajes</div>';
             return;
         }
         
@@ -53,22 +53,35 @@ async function cargarMensajes() {
         console.log('Número de mensajes:', mensajes ? mensajes.length : 0);
         
         if (!mensajes || mensajes.length === 0) {
-            container.innerHTML = '<div class="empty-message">💬 No hay mensajes. ¡Escribe el primero!</div>';
+            container.innerHTML = '<div class="empty-message"><i class="fas fa-comment-slash"></i> No hay mensajes. ¡Escribe el primero!</div>';
             return;
         }
         
-        // Construir HTML manualmente
+        // Construir HTML manualmente con iconos
         let html = '';
         for (let i = 0; i < mensajes.length; i++) {
             const msg = mensajes[i];
-            const esPropio = msg.usuario_id === usuario.id;
+            const esPropio = msg.usuario_id === usuario._id;
             const fecha = new Date(msg.fecha_envio);
             const hora = fecha.toLocaleTimeString('es-MX', {hour: '2-digit', minute:'2-digit'});
             
             html += '<div class="mensaje ' + (esPropio ? 'mensaje-propio' : 'mensaje-otro') + '">';
-            html += '<div class="mensaje-autor">' + (esPropio ? 'Tú' : escapeHtml(msg.usuario_nombre)) + '</div>';
-            html += '<div class="mensaje-texto">' + escapeHtml(msg.mensaje) + '</div>';
-            html += '<div class="mensaje-fecha">' + hora + '</div>';
+            
+            // Autor con icono
+            html += '<div class="mensaje-autor">';
+            if (esPropio) {
+                html += '<i class="fas fa-user-circle"></i> Tú';
+            } else {
+                html += '<i class="fas fa-user-astronaut"></i> ' + escapeHtml(msg.usuario_nombre);
+            }
+            html += '</div>';
+            
+            // Mensaje con icono de comentario
+            html += '<div class="mensaje-texto"><i class="fas fa-comment-dots"></i> ' + escapeHtml(msg.mensaje) + '</div>';
+            
+            // Fecha con icono de reloj
+            html += '<div class="mensaje-fecha"><i class="fas fa-clock"></i> ' + hora + '</div>';
+            
             html += '</div>';
         }
         
@@ -78,10 +91,9 @@ async function cargarMensajes() {
         
     } catch (error) {
         console.error('Error en fetch:', error);
-        container.innerHTML = '<div class="empty-message">❌ Error de conexión</div>';
+        container.innerHTML = '<div class="empty-message"><i class="fas fa-wifi"></i> Error de conexión</div>';
     }
 }
-
 
 // ============================================
 // ENVIAR MENSAJE
@@ -99,8 +111,8 @@ async function enviarMensaje() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                equipo_id: parseInt(equipoId),
-                usuario_id: usuario.id,
+                equipo_id: equipoId,
+                usuario_id: usuario._id,
                 mensaje: mensaje
             })
         });
@@ -112,11 +124,11 @@ async function enviarMensaje() {
             input.value = '';
             cargarMensajes();
         } else {
-            alert('Error: ' + resultado.mensaje);
+            alert('❌ Error: ' + resultado.mensaje);
         }
     } catch (error) {
         console.error('Error al enviar:', error);
-        alert('Error de conexión');
+        alert('❌ Error de conexión');
     }
 }
 

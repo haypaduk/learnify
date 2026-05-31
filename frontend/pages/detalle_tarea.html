@@ -49,7 +49,9 @@
             <div class="contenedor contenedor-grande">
                 <!-- Contenido principal -->
                 <div id="tareaContent">
-                    <div class="sin-entregas">Cargando información de la tarea...</div>
+                    <div class="sin-entregas">
+                        <i class="fas fa-spinner fa-pulse"></i> Cargando información de la tarea...
+                    </div>
                 </div>
             </div>
 
@@ -57,8 +59,10 @@
             <div id="modalVerEntrega" class="modal" style="display: none;">
                 <div class="modal-contenido">
                     <div class="modal-header">
-                        <h3>📄 Detalle de entrega</h3>
-                        <button class="modal-cerrar" onclick="cerrarModalEntrega()">&times;</button>
+                        <h3><i class="fas fa-file-alt"></i> Detalle de entrega</h3>
+                        <button class="modal-cerrar" onclick="cerrarModalEntrega()">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     <div id="modalEntregaContent"></div>
                 </div>

@@ -48,17 +48,24 @@
             <div class="contenedor contenedor-grande">
                 <div class="chat-container">
                     <div class="chat-header">
-                        <h3>💬 Chat del equipo</h3>
-                        <div class="chat-estado conectado" id="estadoChat">Conectado</div>
+                        <h3><i class="fas fa-comments"></i> Chat del equipo</h3>
+                        <div class="chat-estado conectado" id="estadoChat">
+                            <i class="fas fa-circle"></i> Conectado
+                        </div>
                     </div>
 
                     <div class="chat-mensajes" id="chatMensajes">
-                        <div class="empty-message">Cargando mensajes...</div>
+                        <div class="empty-message">
+                            <i class="fas fa-inbox"></i> Cargando mensajes...
+                        </div>
                     </div>
 
                     <div class="chat-input-area">
+                        <i class="fas fa-keyboard"></i>
                         <input type="text" id="mensajeInput" placeholder="Escribe un mensaje..." maxlength="500">
-                        <button id="btnEnviar" class="btn primario btn-chat">📤 Enviar</button>
+                        <button id="btnEnviar" class="btn primario btn-chat">
+                            <i class="fas fa-paper-plane"></i> Enviar
+                        </button>
                     </div>
                 </div>
             </div>

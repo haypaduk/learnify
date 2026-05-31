@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="menu-lateral">
     <div class="app-container">
@@ -37,26 +38,76 @@
 
         <!-- Contenido principal -->
         <main class="main-content">
-            <!-- TODO el contenido original del dashboard -->
             <div class="dashboard-container">
                 <div class="dashboard-header">
-                    <h1>📚 Learnify Classroom</h1>
+                    <h1><i class="fas fa-graduation-cap"></i> Learnify Classroom</h1>
                     <p>Bienvenido/a, <strong id="usuarioNombre">Cargando...</strong></p>
                     <div class="user-badge" id="usuarioRol"></div>
                 </div>
 
                 <div class="dashboard-grid">
+                    <!-- Card: Mis Equipos -->
                     <div class="card">
-                        <h3>📁 Mis Equipos</h3>
+                        <h3><i class="fas fa-users"></i> Mis Equipos</h3>
                         <div id="equiposLista">Cargando equipos...</div>
                         <div class="acciones">
-                            <a href="pages/mis_equipos.html" class="btn-accion">Ver todos</a>
+                            <a href="pages/mis_equipos.html" class="btn-accion"><i class="fas fa-eye"></i> Ver todos</a>
                         </div>
                     </div>
 
+                    <!-- Card: Tareas Pendientes -->
                     <div class="card">
-                        <h3>📋 Tareas Pendientes</h3>
+                        <h3><i class="fas fa-tasks"></i> Tareas Pendientes</h3>
                         <div id="tareasPendientesLista">Cargando tareas...</div>
+                    </div>
+
+                    <!-- Card: Estadísticas del Equipo -->
+                    <div class="card">
+                        <h3><i class="fas fa-chart-bar"></i> Estadísticas de Tareas</h3>
+                        <div class="estadisticas-container">
+                            <div class="estadistica-item">
+                                <div class="estadistica-valor" id="tareasCompletadas">0</div>
+                                <div class="estadistica-label"><i class="fas fa-check-circle" style="color: #10b981;"></i> Tareas Completadas</div>
+                                <div class="estadistica-bar">
+                                    <div class="estadistica-progreso" id="progresoCompletadas" style="width: 0%; background: #10b981;"></div>
+                                </div>
+                            </div>
+                            <div class="estadistica-item">
+                                <div class="estadistica-valor" id="tareasPendientesEstadisticas">0</div>
+                                <div class="estadistica-label"><i class="fas fa-hourglass-half" style="color: #f59e0b;"></i> Tareas Pendientes</div>
+                                <div class="estadistica-bar">
+                                    <div class="estadistica-progreso" id="progresoPendientes" style="width: 0%; background: #f59e0b;"></div>
+                                </div>
+                            </div>
+                            <div class="estadistica-item">
+                                <div class="estadistica-valor" id="tareasVencidas">0</div>
+                                <div class="estadistica-label"><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Tareas Vencidas</div>
+                                <div class="estadistica-bar">
+                                    <div class="estadistica-progreso" id="progresoVencidas" style="width: 0%; background: #ef4444;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="estadistica-total">
+                            <span><i class="fas fa-chart-pie"></i> Total de tareas: <strong id="totalTareas">0</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Card: Actividad Reciente -->
+                    <div class="card">
+                        <h3><i class="fas fa-clock"></i> Actividad Reciente</h3>
+                        <div class="actividad-lista" id="actividadLista">
+                            <div class="actividad-vacia"><i class="fas fa-info-circle"></i> No hay actividad reciente</div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Gráfica de Tareas -->
+                    <div class="card">
+                        <h3><i class="fas fa-chart-line"></i> Progreso de Tareas</h3>
+                        <canvas id="graficaTareas" width="400" height="200" style="max-width: 100%; height: auto;"></canvas>
+                        <div class="acciones-grafica">
+                            <button onclick="exportarGrafica()" class="btn-accion"><i class="fas fa-download"></i> Exportar como PNG</button>
+                            <button onclick="generarReporte()" class="btn-accion btn-reporte"><i class="fas fa-file-alt"></i> Generar Reporte</button>
+                        </div>
                     </div>
                 </div>
             </div>

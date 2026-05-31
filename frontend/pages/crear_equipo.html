@@ -10,34 +10,39 @@
     <title>Learnify | Crear Equipo</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/crear-equipo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="contenedor">
-        <h2>Crear Nuevo Equipo</h2>
+        <h2><i class="fas fa-users"></i> Crear Nuevo Equipo</h2>
         
         <div id="mensaje" class="mensaje"></div>
         
         <form id="formCrearEquipo" class="form-equipo">
             <div class="form-grupo">
-                <label for="nombre">Nombre del equipo *</label>
+                <label for="nombre"><i class="fas fa-tag"></i> Nombre del equipo *</label>
                 <input type="text" id="nombre" placeholder="Ej: Equipo Verde, Desarrollo Web" required>
-                <div class="ayuda">Elige un nombre claro para identificar el equipo.</div>
+                <div class="ayuda"><i class="fas fa-lightbulb"></i> Elige un nombre claro para identificar el equipo.</div>
             </div>
             
             <div class="form-grupo">
-                <label for="descripcion">Descripción (opcional)</label>
+                <label for="descripcion"><i class="fas fa-align-left"></i> Descripción (opcional)</label>
                 <textarea id="descripcion" placeholder="¿Qué objetivos tiene este equipo?"></textarea>
-                <div class="ayuda">Describe brevemente el propósito del equipo.</div>
+                <div class="ayuda"><i class="fas fa-info-circle"></i> Describe brevemente el propósito del equipo.</div>
             </div>
             
             <div class="botones-form">
-                <button type="button" class="btn secundario btn-cancelar" onclick="cancelar()">Cancelar</button>
-                <button type="submit" class="btn primario">Crear equipo</button>
+                <button type="button" class="btn secundario btn-cancelar" onclick="cancelar()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn primario">
+                    <i class="fas fa-save"></i> Crear equipo
+                </button>
             </div>
         </form>
         
         <div class="volver" style="margin-top: 1.5rem;">
-            <a href="mis_equipos.html">← Volver a Mis Equipos</a>
+            <a href="mis_equipos.html"><i class="fas fa-arrow-left"></i> Volver a Mis Equipos</a>
         </div>
     </div>
     

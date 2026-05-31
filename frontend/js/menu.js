@@ -17,7 +17,7 @@ function cargarInfoUsuarioEnMenu() {
             <div class="user-avatar">${usuario.nombre.charAt(0).toUpperCase()}</div>
             <div class="user-details">
                 <span class="user-name">${escapeHtml(usuario.nombre)}</span>
-                <span class="user-role">${usuario.rol === 'maestro' ? '👨‍🏫 Maestro' : '👨‍🎓 Alumno'}</span>
+                <span class="user-role">${usuario.rol === 'maestro' ? '<i class="fas fa-chalkboard-teacher"></i> Maestro' : '<i class="fas fa-user-graduate"></i> Alumno'}</span>
             </div>
         `;
     }

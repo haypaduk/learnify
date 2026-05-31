@@ -1,6 +1,6 @@
 // ============================================
 // ARCHIVO: entregar-tarea.js
-// Lógica para entregar una tarea
+// Lógica para entregar una tarea (MongoDB)
 // ============================================
 
 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -12,7 +12,7 @@ if (!usuario) {
 
 // Solo alumnos pueden entregar tareas
 if (usuario.rol !== 'alumno') {
-    alert('Solo los alumnos pueden entregar tareas');
+    alert(' Solo los alumnos pueden entregar tareas');
     window.location.href = 'mis_equipos.html';
 }
 
@@ -25,7 +25,7 @@ if (!tareaId) {
     window.location.href = 'mis_equipos.html';
 }
 
-// Configurar enlace de volver
+// Configurar enlace de volver (si existe)
 const volverLink = document.getElementById('volverLink');
 if (volverLink && equipoId) {
     volverLink.href = `tareas_equipo.html?equipo_id=${equipoId}`;
@@ -37,11 +37,21 @@ if (volverLink && equipoId) {
 function mostrarMensaje(tipo, texto) {
     const mensajeDiv = document.getElementById('mensaje');
     mensajeDiv.className = `mensaje ${tipo}`;
-    mensajeDiv.textContent = tipo === 'exito' ? `Correcto ${texto}` : `Error ${texto}`;
+    mensajeDiv.textContent = tipo === 'exito' ? `Correcto: ${texto}` : `Error: ${texto}`;
     mensajeDiv.style.display = 'block';
     setTimeout(() => {
         mensajeDiv.style.display = 'none';
     }, 3000);
+}
+
+// ============================================
+// ESCAPAR HTML
+// ============================================
+function escapeHtml(texto) {
+    if (!texto) return '';
+    const div = document.createElement('div');
+    div.textContent = texto;
+    return div.innerHTML;
 }
 
 // ============================================
@@ -59,23 +69,23 @@ async function cargarInfoTarea() {
             const fechaLimite = tarea.fecha_limite ? new Date(tarea.fecha_limite).toLocaleDateString('es-MX') : 'Sin fecha límite';
             
             infoContainer.innerHTML = `
-                <h3>Titulo: ${escapeHtml(tarea.titulo)}</h3>
+                <h3> Titulo: ${escapeHtml(tarea.titulo)}</h3>
                 <p>${escapeHtml(tarea.descripcion || 'Sin descripción')}</p>
-                <p><strong>Creada por:</strong> ${escapeHtml(tarea.creador_nombre)}</p>
-                <p><strong>Equipo:</strong> ${escapeHtml(tarea.equipo_nombre)}</p>
-                <div class="fecha-limite">Fecha límite: ${fechaLimite}</div>
+                <p><strong> Creada por:</strong> ${escapeHtml(tarea.creador_nombre)}</p>
+                <p><strong> Equipo:</strong> ${escapeHtml(tarea.equipo_nombre)}</p>
+                <div class="fecha-limite"> Fecha límite: ${fechaLimite}</div>
             `;
             
-            // Verificar si ya entregó
-            const yaEntrego = tarea.entregas && tarea.entregas.some(e => e.alumno_id === usuario.id);
+            // Verificar si ya entregó - CAMBIO: alumno_id vs usuario._id
+            const yaEntrego = tarea.entregas && tarea.entregas.some(e => e.alumno_id === usuario._id);
             
             if (yaEntrego) {
-                const entrega = tarea.entregas.find(e => e.alumno_id === usuario.id);
+                const entrega = tarea.entregas.find(e => e.alumno_id === usuario._id);
                 const fechaEntrega = new Date(entrega.fecha_entrega).toLocaleDateString('es-MX');
                 infoContainer.innerHTML += `
                     <div class="entrega-existente" style="margin-top: 1rem;">
-                        <p>Ya has entregado esta tarea</p>
-                        <p class="fecha-entrega">Entregada el: ${fechaEntrega}</p>
+                        <p> Ya has entregado esta tarea</p>
+                        <p class="fecha-entrega"> Entregada el: ${fechaEntrega}</p>
                     </div>
                 `;
                 document.getElementById('formEntregar').style.display = 'none';
@@ -83,10 +93,11 @@ async function cargarInfoTarea() {
                 document.getElementById('formEntregar').style.display = 'block';
             }
         } else {
-            infoContainer.innerHTML = `<div class="sin-tareas">Error: ${resultado.mensaje}</div>`;
+            infoContainer.innerHTML = `<div class="sin-tareas"> Error: ${resultado.mensaje}</div>`;
         }
     } catch (error) {
-        infoContainer.innerHTML = '<div class="sin-tareas">Error de conexión</div>';
+        console.error('Error:', error);
+        infoContainer.innerHTML = '<div class="sin-tareas"> Error de conexión</div>';
     }
 }
 
@@ -102,9 +113,8 @@ function cancelar() {
 }
 
 // ============================================
-// ENTREGAR TAREA
+// ENTREGAR TAREA (con FormData para archivo)
 // ============================================
-// Reemplazar la función de enviar
 document.getElementById('formEntregar').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -113,12 +123,13 @@ document.getElementById('formEntregar').addEventListener('submit', async functio
     
     const btnSubmit = this.querySelector('button[type="submit"]');
     const textoOriginal = btnSubmit.textContent;
-    btnSubmit.textContent = 'Entregando...';
+    btnSubmit.textContent = ' Entregando...';
     btnSubmit.disabled = true;
     
     const formData = new FormData();
     formData.append('tarea_id', tareaId);
-    formData.append('alumno_id', usuario.id);
+    // CAMBIO: usuario.id → usuario._id
+    formData.append('alumno_id', usuario._id);
     formData.append('comentario', comentario);
     if (archivo) {
         formData.append('archivo', archivo);
@@ -147,21 +158,12 @@ document.getElementById('formEntregar').addEventListener('submit', async functio
             btnSubmit.disabled = false;
         }
     } catch (error) {
+        console.error('Error:', error);
         mostrarMensaje('error', 'Error de conexión');
         btnSubmit.textContent = textoOriginal;
         btnSubmit.disabled = false;
     }
 });
-
-// ============================================
-// UTILIDADES
-// ============================================
-function escapeHtml(texto) {
-    if (!texto) return '';
-    const div = document.createElement('div');
-    div.textContent = texto;
-    return div.innerHTML;
-}
 
 // ============================================
 // INICIALIZAR

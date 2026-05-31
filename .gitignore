@@ -1,0 +1,14 @@
+# Variables de entorno
+.env
+
+# Archivos subidos
+uploads/
+backend/uploads/
+
+# Archivos temporales
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/

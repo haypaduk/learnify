@@ -1,6 +1,6 @@
 // ============================================
 // ARCHIVO: crear-equipo.js
-// AHORA: Cualquier usuario puede crear equipos
+// AHORA: Cualquier usuario puede crear equipos (MongoDB)
 // ============================================
 
 const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -11,20 +11,12 @@ if (!usuario) {
 }
 
 // ============================================
-// ELIMINO ESTAS LÍNEAS (ya no bloqueamos a alumnos)
-// ============================================
-// if (usuario.rol !== 'maestro') {
-//     alert('Solo los maestros pueden crear equipos.');
-//     window.location.href = 'mis_equipos.html';
-// }
-
-// ============================================
 // EN SU LUGAR, podemos mostrar un mensaje diferente según el rol
 // ============================================
 function mostrarMensajeBienvenida() {
     const titulo = document.querySelector('h2');
     if (usuario.rol === 'alumno') {
-        titulo.innerHTML = 'Crear Equipo de Proyecto';
+        titulo.innerHTML = ' Crear Equipo de Proyecto';
         const ayuda = document.querySelector('.ayuda');
         if (ayuda) {
             ayuda.innerHTML = 'Crea un equipo para trabajar en proyectos con tus compañeros.';
@@ -33,12 +25,12 @@ function mostrarMensajeBienvenida() {
 }
 
 // ============================================
-// RESTO DEL CÓDIGO IGUAL
+// RESTO DEL CÓDIGO
 // ============================================
 function mostrarMensaje(tipo, texto) {
     const mensajeDiv = document.getElementById('mensaje');
     mensajeDiv.className = `mensaje ${tipo}`;
-    mensajeDiv.textContent = tipo === 'exito' ? `Bien ${texto}` : `Error ${texto}`;
+    mensajeDiv.textContent = tipo === 'exito' ? `Correcto: ${texto}` : `Error: ${texto}`;
     mensajeDiv.style.display = 'block';
     setTimeout(() => {
         mensajeDiv.style.display = 'none';
@@ -72,7 +64,8 @@ document.getElementById('formCrearEquipo').addEventListener('submit', async func
             body: JSON.stringify({
                 nombre: nombre,
                 descripcion: descripcion,
-                lider_id: usuario.id
+                // CAMBIO: usuario.id → usuario._id
+                lider_id: usuario._id
             })
         });
         
@@ -90,6 +83,7 @@ document.getElementById('formCrearEquipo').addEventListener('submit', async func
         }
         
     } catch (error) {
+        console.error('Error:', error);
         mostrarMensaje('error', 'Error de conexión');
         btnSubmit.textContent = textoOriginal;
         btnSubmit.disabled = false;
