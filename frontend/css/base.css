@@ -203,3 +203,41 @@ input:focus, select:focus {
 .volver a:hover {
     color: #667eea;
 }
+
+/* ============================================
+     MENSAJES FLOTANTES PROFESIONALES
+     ============================================ */
+.mensaje-flotante {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideInRight 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.mensaje-flotante.exito {
+    background: #10b981;
+}
+
+.mensaje-flotante.error {
+    background: #ef4444;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

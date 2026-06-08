@@ -1,0 +1,407 @@
+/* ============================================
+     ARCHIVO: analisis.css
+     Estilos para el panel de análisis
+     ============================================ */
+
+.analisis-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Selector de equipo */
+.selector-equipo {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.selector-equipo label {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.selector-equipo select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    min-width: 200px;
+}
+
+/* Grid de estadísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-icon.blue { background: #2563eb; }
+.stat-icon.orange { background: #f59e0b; }
+.stat-icon.red { background: #ef4444; }
+.stat-icon.green { background: #10b981; }
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+/* Gráficas */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.chart-card h3 {
+    margin-bottom: 0.75rem;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.chart-card canvas {
+    max-height: 220px;
+    width: 100%;
+}
+
+/* Tabla de alumnos */
+.alumnos-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+}
+
+.alumnos-section h3 {
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+/* Etiquetas de riesgo */
+.riesgo-alto {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.riesgo-medio {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.riesgo-bajo {
+    background: #d1fae5;
+    color: #059669;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.riesgo-sin {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.btn-ver-alumno {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.btn-ver-alumno:hover {
+    background: #1d4ed8;
+}
+
+/* Métricas */
+.metricas-section {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 1.5rem;
+}
+
+.metricas-section h3 {
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.metricas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.metrica-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.metrica-card i {
+    font-size: 2rem;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.metrica-card h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: #1e293b;
+}
+
+.metrica-card p {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* ============================================
+     MÉTRICAS DE DETECCIÓN (CON BARRAS)
+     ============================================ */
+.metrica-valor {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0.5rem 0;
+}
+
+.metrica-umbral {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.metrica-bar {
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.metrica-progreso {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* ============================================
+     SEGMENTACIÓN DE ESTUDIANTES
+     ============================================ */
+.segmentacion-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+}
+
+.segmentacion-section h3 {
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.segmentacion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.segmentacion-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.segmentacion-card h4 {
+    font-size: 0.9rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.segmentacion-barras {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.barra-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.barra-label {
+    width: 80px;
+    color: #475569;
+}
+
+.barra-contenedor {
+    flex: 1;
+    background: #e2e8f0;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.barra-progreso {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.barra-count {
+    width: 30px;
+    text-align: right;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* ============================================
+     DETECCIÓN DE ABANDONO ESCOLAR
+     ============================================ */
+.abandono-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 2rem;
+}
+
+.abandono-section h3 {
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.abandono-resumen {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.abandono-stat {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+}
+
+.abandono-stat .stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    display: block;
+}
+
+.abandono-stat .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+}
+
+.alerta-activa {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.alerta-activa.alerta-roja { background: #ef4444; }
+.alerta-activa.alerta-naranja { background: #f59e0b; }
+.alerta-activa.alerta-verde { background: #10b981; }

@@ -1,0 +1,377 @@
+/* ============================================
+     ARCHIVO: estadias.css
+     Estilos para la gestión de Estadías Profesionales
+     ============================================ */
+
+/* Contenedor principal */
+.estadias-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Cabecera */
+.header-estadias {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-estadias h2 {
+    margin: 0;
+}
+
+/* Grid de estadías */
+.estadias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Tarjeta de estadía */
+.estadia-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.estadia-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+}
+
+.estadia-card.en-curso {
+    border-left: 4px solid #10b981;
+}
+
+.estadia-card.completada {
+    border-left: 4px solid #94a3b8;
+    opacity: 0.8;
+}
+
+.estadia-titulo {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.estadia-empresa {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.estadia-fechas {
+    font-size: 0.8rem;
+    color: #475569;
+    margin: 0.5rem 0;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.estadia-duracion {
+    font-size: 0.8rem;
+    color: #667eea;
+    font-weight: 500;
+}
+
+.estadia-estado {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.estado-en-curso {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.estado-pendiente {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.estado-completada {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.estado-cancelada {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.estadia-acciones {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+
+.btn-ver-estadia {
+    background: #2563eb;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar-estadia {
+    background: #f59e0b;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-generar-reporte {
+    background: #8b5cf6;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Sin estadías */
+.sin-estadias {
+    text-align: center;
+    padding: 3rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    color: #64748b;
+}
+
+/* Formulario de estadía */
+.form-estadia {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    margin-top: 1rem;
+}
+
+.form-grupo {
+    margin-bottom: 1.5rem;
+}
+
+.form-grupo label {
+    display: block;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.form-grupo input,
+.form-grupo select,
+.form-grupo textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.botones-form {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.botones-form button {
+    flex: 1;
+}
+
+.btn-eliminar-estadia {
+    background: #dc2626;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-eliminar-estadia:hover {
+    background: #b91c1c;
+}
+
+/* ============================================
+     ICONOS PROFESIONALES PARA ESTADÍAS
+     ============================================ */
+
+.estadia-card .estadia-titulo i {
+    color: #2563eb;
+    margin-right: 0.5rem;
+}
+
+.estadia-card .estadia-empresa i {
+    color: #64748b;
+    margin-right: 0.5rem;
+}
+
+.estadia-card .estadia-fechas i {
+    color: #10b981;
+    margin-right: 0.3rem;
+}
+
+.estadia-card .btn-ver-estadia i,
+.estadia-card .btn-editar-estadia i,
+.estadia-card .btn-eliminar-estadia i,
+.estadia-card .btn-generar-reporte i {
+    margin-right: 0.3rem;
+}
+
+/* Estado con iconos */
+.estadia-estado i {
+    margin-right: 0.3rem;
+}
+
+.estado-en-curso i {
+    color: #10b981;
+}
+
+.estado-pendiente i {
+    color: #f59e0b;
+}
+
+.estado-completada i {
+    color: #3b82f6;
+}
+
+.estado-cancelada i {
+    color: #dc2626;
+}
+
+/* ============================================
+     MODAL DE CONFIRMACIÓN
+     ============================================ */
+.modal-confirmar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-confirmar-contenido {
+    background: white;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    overflow: hidden;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-confirmar-header {
+    background: #fef3c7;
+    padding: 1.25rem;
+    text-align: center;
+    border-bottom: 1px solid #fde68a;
+}
+
+.modal-confirmar-header i {
+    font-size: 2.5rem;
+    color: #d97706;
+    margin-bottom: 0.5rem;
+}
+
+.modal-confirmar-header h3 {
+    margin: 0;
+    color: #92400e;
+    font-size: 1.2rem;
+}
+
+.modal-confirmar-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.modal-confirmar-body p {
+    margin: 0 0 0.5rem;
+    color: #1e293b;
+}
+
+.modal-advertencia {
+    font-size: 0.8rem;
+    color: #dc2626 !important;
+}
+
+.modal-confirmar-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem 1.5rem;
+    background: #f8fafc;
+}
+
+.modal-confirmar-footer button {
+    flex: 1;
+    margin: 0;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}

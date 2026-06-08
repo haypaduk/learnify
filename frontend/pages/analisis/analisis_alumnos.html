@@ -1,0 +1,294 @@
+<!-- ============================================
+     ARCHIVO: analisis-alumnos.html
+     Panel de análisis de rendimiento estudiantil
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Análisis de Alumnos</title>
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/menu.css">
+    <link rel="stylesheet" href="../../css/analisis.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="menu-lateral">
+    <div class="app-container">
+        <!-- Menú lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i><span> Learnify</span></h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../../dashboard.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i><span> Dashboard</span>
+                </a>
+                <a href="../mis_equipos.html" class="menu-item">
+                    <i class="fas fa-users"></i><span> Mis Equipos</span>
+                </a>
+                <a href="analisis_alumnos.html" class="menu-item active">
+                    <i class="fas fa-chart-pie"></i><span> Análisis</span>
+                </a>
+                <a href="../duales/mis_duales.html" class="menu-item">
+                    <i class="fas fa-briefcase"></i><span> Duales</span>
+                </a>
+                <a href="../estadias/mis_estadias.html" class="menu-item">
+                    <i class="fas fa-building"></i><span> Estadías</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info-sidebar" id="userInfoSidebar"></div>
+                <button class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="analisis-container">
+                <!-- Selector de equipo -->
+                <div class="selector-equipo">
+                    <label><i class="fas fa-users"></i> Seleccionar equipo:</label>
+                    <select id="selectorEquipo">
+                        <option value="">Cargando equipos...</option>
+                    </select>
+                </div>
+
+                <!-- Tarjetas de resumen -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-user-graduate"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalAlumnos">0</span>
+                            <span class="stat-label">Total Alumnos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="promedioGeneral">0</span>
+                            <span class="stat-label">Promedio General</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="alumnosRiesgo">0</span>
+                            <span class="stat-label">En Riesgo</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="asistenciaPromedio">0</span>
+                            <span class="stat-label">Asistencia</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficas -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar"></i> Calificaciones por Tarea</h3>
+                        <canvas id="graficaTareas" height="250"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-pie"></i> Distribución de Calificaciones</h3>
+                        <canvas id="graficaDistribucion" height="250"></canvas>
+                    </div>
+                </div>
+
+                <!-- Tabla de alumnos -->
+                <div class="alumnos-section">
+                    <h3><i class="fas fa-list-alt"></i> Detalle de Alumnos</h3>
+                    <div class="table-container">
+                        <table id="tablaAlumnos">
+                            <thead>
+                                <tr>
+                                    <th>Alumno</th>
+                                    <th>Promedio</th>
+                                    <th>Tareas</th>
+                                    <th>Entregas Tardías</th>
+                                    <th>Riesgo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alumnosTableBody">
+                                <tr><td colspan="6">Selecciona un equipo</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- SEGMENTACIÓN DE ESTUDIANTES                    -->
+                <!-- ============================================ -->
+                <div class="segmentacion-section">
+                    <h3><i class="fas fa-chart-pie"></i> Segmentación de Estudiantes</h3>
+                    <div class="segmentacion-grid">
+                        <!-- Desempeño -->
+                        <div class="segmentacion-card">
+                            <h4><i class="fas fa-star"></i> Desempeño Académico</h4>
+                            <div class="segmentacion-barras">
+                                <div class="barra-item">
+                                    <span class="barra-label">Alto (≥85%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraAlto" class="barra-progreso" style="width: 0%; background: #10b981;"></div>
+                                    </div>
+                                    <span id="altoCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Regular (70-84%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraRegular" class="barra-progreso" style="width: 0%; background: #f59e0b;"></div>
+                                    </div>
+                                    <span id="regularCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Bajo (&lt;70%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraBajo" class="barra-progreso" style="width: 0%; background: #ef4444;"></div>
+                                    </div>
+                                    <span id="bajoCount" class="barra-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Participación -->
+                        <div class="segmentacion-card">
+                            <h4><i class="fas fa-tasks"></i> Participación</h4>
+                            <div class="segmentacion-barras">
+                                <div class="barra-item">
+                                    <span class="barra-label">Alta (&gt;80%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraPartAlta" class="barra-progreso" style="width: 0%; background: #10b981;"></div>
+                                    </div>
+                                    <span id="partAltaCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Media (50-80%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraPartMedia" class="barra-progreso" style="width: 0%; background: #f59e0b;"></div>
+                                    </div>
+                                    <span id="partMediaCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Baja (&lt;50%)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraPartBaja" class="barra-progreso" style="width: 0%; background: #ef4444;"></div>
+                                    </div>
+                                    <span id="partBajaCount" class="barra-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comportamiento -->
+                        <div class="segmentacion-card">
+                            <h4><i class="fas fa-clock"></i> Entregas a Tiempo</h4>
+                            <div class="segmentacion-barras">
+                                <div class="barra-item">
+                                    <span class="barra-label">Positivo (0 tardías)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraCompPositivo" class="barra-progreso" style="width: 0%; background: #10b981;"></div>
+                                    </div>
+                                    <span id="compPositivoCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Neutro (1-2 tardías)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraCompNeutro" class="barra-progreso" style="width: 0%; background: #f59e0b;"></div>
+                                    </div>
+                                    <span id="compNeutroCount" class="barra-count">0</span>
+                                </div>
+                                <div class="barra-item">
+                                    <span class="barra-label">Negativo (&gt;2 tardías)</span>
+                                    <div class="barra-contenedor">
+                                        <div id="barraCompNegativo" class="barra-progreso" style="width: 0%; background: #ef4444;"></div>
+                                    </div>
+                                    <span id="compNegativoCount" class="barra-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================ -->
+                <!-- MÉTRICAS DE DETECCIÓN                         -->
+                <!-- ============================================ -->
+                <div class="metricas-section">
+                    <h3><i class="fas fa-chart-simple"></i> Métricas de Detección</h3>
+                    <div class="metricas-grid">
+                        <div class="metrica-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Bajo Rendimiento</h4>
+                            <p>Promedio &lt; 70</p>
+                        </div>
+                        <div class="metrica-card">
+                            <i class="fas fa-comments"></i>
+                            <h4>Poca Participación</h4>
+                            <p>&lt; 50% de tareas</p>
+                        </div>
+                        <div class="metrica-card">
+                            <i class="fas fa-clock"></i>
+                            <h4>Entregas Tardías</h4>
+                            <p>&gt; 2 entregas tardías</p>
+                        </div>
+                        <div class="metrica-card">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Riesgo Reprobación</h4>
+                            <p>Promedio &lt; 60</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- DETECCIÓN DE ABANDONO ESCOLAR                -->
+            <!-- ============================================ -->
+            <div class="abandono-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> Riesgo de Abandono Escolar</h3>
+                
+                <div class="abandono-resumen">
+                    <div class="abandono-stat">
+                        <span class="stat-label">Alto Riesgo</span>
+                        <span class="stat-value" id="altoRiesgoCount">0</span>
+                    </div>
+                    <div class="abandono-stat">
+                        <span class="stat-label">Medio Riesgo</span>
+                        <span class="stat-value" id="medioRiesgoCount">0</span>
+                    </div>
+                    <div class="abandono-stat">
+                        <span class="stat-label">Bajo Riesgo</span>
+                        <span class="stat-value" id="bajoRiesgoCount">0</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tablaAbandono">
+                        <thead>
+                            <tr>
+                                <th>Alumno</th>
+                                <th>Días Inactivo</th>
+                                <th>Tareas Pendientes</th>
+                                <th>Mensajes (30 días)</th>
+                                <th>Riesgo</th>
+                                <th>Alertas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="abandonoTableBody">
+                            <tr><td colspan="6">Selecciona un equipo...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/menu.js"></script>
+    <script src="../../js/analisis.js"></script>
+</body>
+</html>

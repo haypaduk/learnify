@@ -80,6 +80,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal para importar alumnos desde CSV -->
+            <div id="modalImportarCSV" class="modal-confirmar" style="display: none;">
+                <div class="modal-confirmar-contenido" style="max-width: 500px;">
+                    <div class="modal-confirmar-header">
+                        <i class="fas fa-upload"></i>
+                        <h3>Importar alumnos desde CSV</h3>
+                    </div>
+                    <div class="modal-confirmar-body">
+                        <p>Selecciona un archivo CSV con las siguientes columnas:</p>
+                        <p class="modal-advertencia" style="background: #f1f5f9; padding: 8px; border-radius: 8px;">
+                            <strong>nombre,email</strong>
+                        </p>
+                        <form id="formImportarCSV">
+                            <input type="hidden" id="equipoIdImport" name="equipo_id">
+                            <input type="file" id="csvFile" accept=".csv" required style="width: 100%; margin-top: 10px;">
+                        </form>
+                    </div>
+                    <div class="modal-confirmar-footer">
+                        <button id="btnCancelarImportar" class="btn secundario">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button id="btnConfirmarImportar" class="btn primario">
+                            <i class="fas fa-upload"></i> Importar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 

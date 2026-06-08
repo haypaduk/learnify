@@ -175,3 +175,58 @@ ALTER TABLE entregas ADD COLUMN IF NOT EXISTS nombre_archivo VARCHAR(255) NULL;
 -- ============================================
 SHOW TABLES;
 SHOW COLUMNS FROM entregas;
+
+-- ============================================
+-- MONGODB: CREAR BASE DE DATOS Y COLECCIONES
+// ============================================
+// CREAR COLECCIONES PARA DUALES Y ESTADÍAS
+// ============================================
+
+// Colección: duales
+db.createCollection("duales");
+
+// Colección: estadias
+db.createCollection("estadias");
+
+// ============================================
+// ÍNDICES PARA BÚSQUEDAS
+// ============================================
+db.duales.createIndex({ usuario_id: 1 });
+db.duales.createIndex({ estado: 1 });
+db.estadias.createIndex({ usuario_id: 1 });
+db.estadias.createIndex({ estado: 1 });
+
+// ============================================
+// DOCUMENTO DE EJEMPLO PARA DUAL
+// ============================================
+// {
+//   "_id": ObjectId,
+//   "usuario_id": ObjectId,
+//   "titulo": "Desarrollo Frontend",
+//   "empresa": "Tech Solutions",
+//   "descripcion": "Desarrollo de interfaces web",
+//   "fecha_inicio": ISODate("2026-01-15"),
+//   "fecha_fin": ISODate("2026-07-15"),
+//   "horas": 480,
+//   "tutor": "Ing. María González",
+//   "estado": "activo",
+//   "fecha_creacion": ISODate()
+// }
+
+// ============================================
+// DOCUMENTO DE EJEMPLO PARA ESTADÍA
+// ============================================
+// {
+//   "_id": ObjectId,
+//   "usuario_id": ObjectId,
+//   "titulo": "Desarrollo de Software",
+//   "empresa": "SoftTech México",
+//   "descripcion": "Desarrollo de aplicaciones web",
+//   "fecha_inicio": ISODate("2026-01-10"),
+//   "fecha_fin": ISODate("2026-06-10"),
+//   "horas": 600,
+//   "ubicacion": "Ciudad de México",
+//   "tutor": "Ing. Carlos Ramírez",
+//   "estado": "en-curso",
+//   "fecha_creacion": ISODate()
+// }

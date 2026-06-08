@@ -45,7 +45,6 @@ async function cargarEquipo() {
 function mostrarEquipo(equipo) {
     console.log('Equipo completo recibido:', equipo);
     const container = document.getElementById('equipoContent');
-    // CAMBIO: usuario.id → usuario._id
     const esLider = usuario._id === equipo.lider_id;
     
     container.innerHTML = `
@@ -86,6 +85,7 @@ function mostrarEquipo(equipo) {
             <button class="btn primario" onclick="abrirChat()"><i class="fas fa-comments"></i> Chat del equipo</button>
             ${esLider ? `
                 <button class="btn primario" onclick="abrirModalAgregar()"><i class="fas fa-user-plus"></i> Invitar miembros</button>
+                <button class="btn primario" onclick="abrirModalImportarCSV()"><i class="fas fa-file-csv"></i> Importar alumnos (CSV)</button>
             ` : ''}
             ${!esLider && usuario.rol === 'alumno' ? `
                 <button class="btn btn-salir" onclick="confirmarSalirEquipoDetalle('${equipo.id}', '${escapeHtml(equipo.nombre)}')"><i class="fas fa-sign-out-alt"></i> Salir del equipo</button>
@@ -138,6 +138,7 @@ function formatearFecha(fecha) {
 // CONFIRMAR SALIR DEL EQUIPO (desde detalle)
 // ============================================
 function confirmarSalirEquipoDetalle(equipoId, equipoNombre) {
+    // Usamos confirm nativo, no se puede personalizar con iconos
     if (confirm(`¿Estás seguro de que quieres salir del equipo "${equipoNombre}"?`)) {
         salirDelEquipoDetalle(equipoId);
     }
@@ -157,15 +158,32 @@ async function salirDelEquipoDetalle(equipoId) {
         const resultado = await respuesta.json();
         
         if (resultado.exito) {
-            alert('✅ Has salido del equipo');
-            window.location.href = 'mis_equipos.html';
+            mostrarMensaje('exito', 'Has salido del equipo');
+            setTimeout(() => {
+                window.location.href = 'mis_equipos.html';
+            }, 1500);
         } else {
-            alert('❌ Error: ' + resultado.mensaje);
+            mostrarMensaje('error', resultado.mensaje);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('❌ Error de conexión');
+        mostrarMensaje('error', 'Error de conexión');
     }
+}
+
+// ============================================
+// MOSTRAR MENSAJE (estilo profesional)
+// ============================================
+function mostrarMensaje(tipo, texto) {
+    // Crear un div de mensaje flotante (puedes personalizarlo)
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = `mensaje-flotante ${tipo}`;
+    mensajeDiv.innerHTML = `<i class="fas ${tipo === 'exito' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${texto}`;
+    document.body.appendChild(mensajeDiv);
+    
+    setTimeout(() => {
+        mensajeDiv.remove();
+    }, 3000);
 }
 
 // ============================================
@@ -174,6 +192,95 @@ async function salirDelEquipoDetalle(equipoId) {
 function abrirChat() {
     window.location.href = `chat_equipo.html?equipo_id=${equipoId}`;
 }
+
+// ============================================
+// MODAL IMPORTAR CSV
+// ============================================
+function abrirModalImportarCSV() {
+    const modal = document.getElementById('modalImportarCSV');
+    const equipoIdInput = document.getElementById('equipoIdImport');
+    if (equipoIdInput) {
+        equipoIdInput.value = equipoId;
+    }
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+}
+
+function cerrarModalImportarCSV() {
+    const modal = document.getElementById('modalImportarCSV');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Configurar eventos de importación (se ejecutan una sola vez)
+document.addEventListener('DOMContentLoaded', function() {
+    const btnConfirmar = document.getElementById('btnConfirmarImportar');
+    const btnCancelar = document.getElementById('btnCancelarImportar');
+    
+    if (btnConfirmar) {
+        btnConfirmar.onclick = async function() {
+            const fileInput = document.getElementById('csvFile');
+            const equipoIdImport = document.getElementById('equipoIdImport').value;
+            
+            if (!fileInput.files.length) {
+                mostrarMensaje('error', 'Selecciona un archivo CSV');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('archivo', fileInput.files[0]);
+            formData.append('equipo_id', equipoIdImport);
+            formData.append('usuario_id', usuario._id);
+            
+            const btn = this;
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Importando...';
+            btn.disabled = true;
+            
+            try {
+                const respuesta = await fetch('/api/importar/alumnos', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const resultado = await respuesta.json();
+                
+                if (resultado.exito) {
+                    mostrarMensaje('exito', resultado.mensaje);
+                    cerrarModalImportarCSV();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    mostrarMensaje('error', resultado.mensaje);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarMensaje('error', 'Error de conexión');
+            } finally {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+                fileInput.value = '';
+            }
+        };
+    }
+    
+    if (btnCancelar) {
+        btnCancelar.onclick = cerrarModalImportarCSV;
+    }
+    
+    // Cerrar modal haciendo click fuera
+    const modal = document.getElementById('modalImportarCSV');
+    if (modal) {
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                cerrarModalImportarCSV();
+            }
+        };
+    }
+});
 
 // ============================================
 // INICIALIZAR

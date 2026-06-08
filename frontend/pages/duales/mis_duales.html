@@ -1,0 +1,96 @@
+<!-- ============================================
+     ARCHIVO: mis_duales.html
+     Gestión de Duales (Empresas/Prácticas profesionales)
+     ============================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learnify | Mis Duales</title>
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/menu.css">
+    <link rel="stylesheet" href="../../css/duales.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="menu-lateral">
+    <div class="app-container">
+        <!-- Menú lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i><span> Learnify</span></h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../../dashboard.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i><span> Dashboard</span>
+                </a>
+                <a href="../mis_equipos.html" class="menu-item">
+                    <i class="fas fa-users"></i><span> Mis Equipos</span>
+                </a>
+                <a href="../analisis/analisis_alumnos.html" class="menu-item">
+                    <i class="fas fa-chart-pie"></i><span> Análisis</span>
+                </a>
+                <a href="mis_duales.html" class="menu-item active">
+                    <i class="fas fa-briefcase"></i><span> Duales</span>
+                </a>
+                <a href="../estadias/mis_estadias.html" class="menu-item">
+                    <i class="fas fa-building"></i><span> Estadías</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info-sidebar" id="userInfoSidebar"></div>
+                <button class="btn-cerrar-sesion" onclick="cerrarSesion()">
+                    <i class="fas fa-sign-out-alt"></i><span> Cerrar sesión</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <div class="duales-container">
+                <div class="header-duales">
+                    <h2><i class="fas fa-briefcase"></i> Mis Duales</h2>
+                    <button id="btnCrearDual" class="btn primario">
+                        <i class="fas fa-plus-circle"></i> Registrar Dual
+                    </button>
+                </div>
+
+                <!-- Mensajes -->
+                <div id="mensaje" class="mensaje"></div>
+
+                <!-- Contenedor de duales -->
+                <div id="dualesContainer" class="duales-grid">
+                    <div class="sin-duales">
+                        <i class="fas fa-briefcase"></i> Cargando duales...
+                    </div>
+                </div>
+            </div>
+            <!-- Modal de confirmación para eliminar dual -->
+            <div id="modalConfirmar" class="modal-confirmar" style="display: none;">
+                <div class="modal-confirmar-contenido">
+                    <div class="modal-confirmar-header">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Confirmar eliminación</h3>
+                    </div>
+                    <div class="modal-confirmar-body">
+                        <p>¿Estás seguro de que quieres eliminar este dual?</p>
+                        <p class="modal-advertencia">Esta acción no se puede deshacer.</p>
+                    </div>
+                    <div class="modal-confirmar-footer">
+                        <button id="btnCancelarEliminar" class="btn secundario">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button id="btnConfirmarEliminar" class="btn-danger">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/menu.js"></script>
+    <script src="../../js/duales.js"></script>
+</body>
+</html>

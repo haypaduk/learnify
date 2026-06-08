@@ -39,7 +39,7 @@ function escapeHtml(texto) {
 
 function cerrarSesion() {
     localStorage.removeItem('usuario');
-    window.location.href = '../bienvenida.html';
+    window.location.href = '/bienvenida.html';
 }
 
 // Ejecutar al cargar la página
