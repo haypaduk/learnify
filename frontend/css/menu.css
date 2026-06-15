@@ -188,3 +188,26 @@ body.menu-lateral {
         margin: 0;
     }
 }
+
+/* Botón de toggle de tema */
+.btn-theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s;
+    color: var(--text-secondary);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.btn-theme-toggle:hover {
+    background-color: var(--border-color);
+    transform: scale(1.1);
+}

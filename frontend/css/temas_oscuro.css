@@ -1,0 +1,2022 @@
+/* ============================================
+     TEMAS: CLARO y OSCURO (Rojo, Blanco, Negro)
+     ============================================ */
+
+/* ============================================
+     VARIABLES DEL TEMA CLARO (por defecto)
+     ============================================ */
+:root {
+    /* Fondos */
+    --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg-card: #ffffff;
+    --bg-sidebar: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --bg-container: #ffffff;
+    --bg-header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Textos */
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --text-white: #ffffff;
+    
+    /* Bordes */
+    --border-color: #e2e8f0;
+    --border-light: #f1f5f9;
+    
+    /* Acentos (morado en modo claro) */
+    --accent-primary: #667eea;
+    --accent-hover: #5a67d8;
+    --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Estados */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    /* Tarjetas y elementos */
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --card-hover-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    
+    /* Sidebar */
+    --sidebar-bg: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    --sidebar-text: #cbd5e1;
+    --sidebar-text-hover: #ffffff;
+    --sidebar-active: #667eea;
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+     VARIABLES DEL TEMA OSCURO
+     ============================================ */
+body.dark-mode {
+    /* Fondos */
+    --bg-body: #0a0a0a;
+    --bg-card: #1a1a1a;
+    --bg-sidebar: #000000;
+    --bg-container: #111111;
+    --bg-header-gradient: linear-gradient(135deg, #cc0000 0%, #ff0000 100%);
+    
+    /* Textos */
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #999999;
+    --text-white: #ffffff;
+    
+    /* Bordes */
+    --border-color: #333333;
+    --border-light: #222222;
+    
+    /* Acentos (rojo en modo oscuro) */
+    --accent-primary: #ff0000;
+    --accent-hover: #cc0000;
+    --accent-gradient: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    
+    /* Estados */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    
+    /* Tarjetas y elementos */
+    --card-bg: #1a1a1a;
+    --card-border: #333333;
+    --card-hover-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    
+    /* Sidebar */
+    --sidebar-bg: #000000;
+    --sidebar-text: #cccccc;
+    --sidebar-text-hover: #ffffff;
+    --sidebar-active: #ff0000;
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+     APLICACIÓN DE VARIABLES
+     ============================================ */
+
+/* Body y fondo general */
+body {
+    background: var(--bg-body);
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--sidebar-bg) !important;
+}
+
+.sidebar-nav a {
+    color: var(--sidebar-text) !important;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--sidebar-text-hover) !important;
+}
+
+.sidebar-nav a.active {
+    background: var(--sidebar-active) !important;
+    color: white !important;
+}
+
+.sidebar-header h2,
+.sidebar-header h2 i {
+    color: white !important;
+}
+
+.user-name,
+.user-role {
+    color: white !important;
+}
+
+/* Dashboard header */
+.dashboard-header {
+    background: var(--bg-header-gradient) !important;
+}
+
+.dashboard-header h1,
+.dashboard-header p,
+.dashboard-header .user-badge {
+    color: white !important;
+}
+
+/* Tarjetas */
+.card,
+.stat-card,
+.chart-card,
+.segmentacion-card,
+.metrica-card,
+.dual-card,
+.estadia-card,
+.dashboard-mockup,
+.info-equipo,
+.miembros-section,
+.tarea-card,
+.equipo-card,
+.selector-equipo,
+.alumnos-section,
+.metricas-section,
+.segmentacion-section,
+.abandono-section {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Textos de tarjetas */
+.card h3,
+.chart-card h3,
+.segmentacion-card h4,
+.tarea-titulo,
+.dual-titulo,
+.estadia-titulo,
+.equipo-nombre,
+.nombre-equipo,
+.miembros-header h3,
+.metrica-card h4,
+.segmentacion-section h3,
+.abandono-section h3 {
+    color: var(--text-primary) !important;
+}
+
+.tarea-descripcion,
+.equipo-descripcion,
+.descripcion-equipo,
+.meta-item,
+.dual-empresa,
+.estadia-empresa,
+.miembro-rol,
+.selector-equipo label,
+.stat-label,
+.metrica-card p {
+    color: var(--text-secondary) !important;
+}
+
+/* Tablas */
+th {
+    background: var(--bg-container) !important;
+    color: var(--text-primary) !important;
+}
+
+td {
+    color: var(--text-secondary) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+tr:hover {
+    background: var(--border-light) !important;
+}
+
+/* Botones */
+.btn.primario,
+.btn-primario,
+.btn-crear,
+.btn-crear-tarea,
+.btn-chat,
+.btn-tareas {
+    background: var(--accent-primary) !important;
+}
+
+.btn.primario:hover,
+.btn-primario:hover,
+.btn-crear:hover,
+.btn-crear-tarea:hover,
+.btn-chat:hover,
+.btn-tareas:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Botones secundarios y acciones */
+.btn-ver,
+.btn-ver-dual,
+.btn-ver-estadia,
+.btn-ver-tarea {
+    background: var(--accent-primary) !important;
+}
+
+.btn-ver:hover,
+.btn-ver-dual:hover,
+.btn-ver-estadia:hover,
+.btn-ver-tarea:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Inputs y selects */
+input, select, textarea {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Enlaces */
+.enlace-rapido a,
+.volver a,
+.ver-mas a {
+    color: var(--accent-primary) !important;
+}
+
+/* Modales */
+.modal-container,
+.modal-contenido,
+.modal-confirmar-contenido {
+    background: var(--bg-card) !important;
+}
+
+.modal-header,
+.modal-footer,
+.modal-confirmar-header,
+.modal-confirmar-footer {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+}
+
+.modal-header h3,
+.modal-confirmar-header h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Chat */
+.chat-container {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.chat-header {
+    background: var(--accent-primary) !important;
+}
+
+.chat-mensajes {
+    background: var(--bg-body) !important;
+}
+
+.mensaje-otro {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.mensaje-propio {
+    background: var(--accent-primary) !important;
+}
+
+.chat-input-area input {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Gráficas - ajuste para modo oscuro */
+body.dark-mode canvas {
+    filter: brightness(0.9) contrast(1.1);
+}
+
+/* Estados de conexión */
+.chat-estado.conectado {
+    background: var(--success) !important;
+}
+
+/* Barras de progreso */
+.estadistica-bar,
+.metrica-bar,
+.barra-contenedor {
+    background: var(--border-color) !important;
+}
+
+/* Riesgos y badges */
+.riesgo-alto {
+    background: var(--danger) !important;
+    color: white !important;
+}
+
+.riesgo-medio {
+    background: var(--warning) !important;
+    color: white !important;
+}
+
+.riesgo-bajo {
+    background: var(--success) !important;
+    color: white !important;
+}
+
+/* Scrollbar en modo oscuro */
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-hover);
+}
+
+/* ============================================
+     CORRECCIÓN: TAREAS PENDIENTES EN DASHBOARD
+     ============================================ */
+
+/* Contenedor principal de tareas pendientes */
+#tareasPendientesLista {
+    background: transparent !important;
+}
+
+/* Cada elemento de tarea pendiente */
+#tareasPendientesLista .tarea-pendiente-item {
+    background: transparent !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+/* Título de la tarea */
+#tareasPendientesLista .tarea-pendiente-titulo {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+}
+
+/* Nombre del equipo en la tarea */
+#tareasPendientesLista .tarea-pendiente-equipo {
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+}
+
+/* Fecha de la tarea */
+#tareasPendientesLista .tarea-pendiente-fecha {
+    color: var(--warning) !important;
+    background: transparent !important;
+}
+
+/* Fecha vencida */
+#tareasPendientesLista .tarea-pendiente-fecha.vencida {
+    color: var(--danger) !important;
+}
+
+/* Botón entregar */
+#tareasPendientesLista .btn-entregar-pequeno {
+    background: var(--warning) !important;
+    color: white !important;
+}
+
+#tareasPendientesLista .btn-entregar-pequeno:hover {
+    background: #d97706 !important;
+}
+
+/* Botón calificar (para líderes) */
+#tareasPendientesLista .btn-ver-pequeno {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+#tareasPendientesLista .btn-ver-pequeno:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Mensaje cuando no hay tareas */
+#tareasPendientesLista .empty-message {
+    color: var(--text-muted) !important;
+    background: transparent !important;
+}
+
+/* Enlace "Ver más tareas" */
+#tareasPendientesLista .ver-mas a {
+    color: var(--accent-primary) !important;
+}
+
+#tareasPendientesLista .ver-mas a:hover {
+    text-decoration: underline !important;
+}
+
+/* ============================================
+     CORRECCIÓN: LISTA DE EQUIPOS EN DASHBOARD
+     ============================================ */
+
+/* Contenedor de equipos */
+#equiposLista {
+    background: transparent !important;
+}
+
+#equiposLista .equipo-item {
+    border-bottom-color: var(--border-color) !important;
+}
+
+#equiposLista .equipo-nombre {
+    color: var(--text-primary) !important;
+}
+
+#equiposLista .equipo-rol {
+    background: var(--border-light) !important;
+    color: var(--text-secondary) !important;
+}
+
+#equiposLista .empty-message {
+    color: var(--text-muted) !important;
+}
+
+#equiposLista .empty-message a {
+    color: var(--accent-primary) !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TAREAS EN PÁGINA DE TAREAS
+     ============================================ */
+
+/* Tareas del equipo */
+.tareas-grid .tarea-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.tarea-card .tarea-titulo {
+    color: var(--text-primary) !important;
+}
+
+.tarea-card .tarea-descripcion {
+    color: var(--text-secondary) !important;
+}
+
+.tarea-card .tarea-fecha {
+    color: var(--text-secondary) !important;
+}
+
+.tarea-card .tarea-fecha.vencida {
+    color: var(--danger) !important;
+}
+
+.tarea-card .tarea-creador {
+    background: var(--border-light) !important;
+    color: var(--text-secondary) !important;
+}
+
+.tarea-card .entregas-badge {
+    background: var(--border-light) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Botones de tarea */
+.btn-ver-tarea {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+.btn-entregar {
+    background: var(--warning) !important;
+    color: white !important;
+}
+
+.btn-calificar {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+/* Mensaje sin tareas */
+.sin-tareas {
+    color: var(--text-secondary) !important;
+    background: var(--bg-card) !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TEXTO EN ANÁLISIS
+     ============================================ */
+
+/* Selector de equipo */
+.selector-equipo label {
+    color: var(--text-primary) !important;
+}
+
+.selector-equipo select {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Tarjetas de estadísticas */
+.stat-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.stat-value {
+    color: var(--text-primary) !important;
+}
+
+.stat-label {
+    color: var(--text-secondary) !important;
+}
+
+/* Gráficas - títulos */
+.chart-card h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Tabla de alumnos */
+.alumnos-section h3 {
+    color: var(--text-primary) !important;
+}
+
+th {
+    background: var(--bg-container) !important;
+    color: var(--text-primary) !important;
+}
+
+td {
+    color: var(--text-secondary) !important;
+}
+
+td strong {
+    color: var(--text-primary) !important;
+}
+
+/* Métricas de detección */
+.metricas-section h3 {
+    color: var(--text-primary) !important;
+}
+
+.metrica-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.metrica-card h4 {
+    color: var(--text-primary) !important;
+}
+
+.metrica-card p {
+    color: var(--text-secondary) !important;
+}
+
+.metrica-valor {
+    color: var(--text-primary) !important;
+}
+
+.metrica-umbral {
+    color: var(--text-secondary) !important;
+}
+
+/* Segmentación */
+.segmentacion-section h3 {
+    color: var(--text-primary) !important;
+}
+
+.segmentacion-card h4 {
+    color: var(--text-primary) !important;
+}
+
+.barra-label {
+    color: var(--text-secondary) !important;
+}
+
+.barra-count {
+    color: var(--text-primary) !important;
+}
+
+/* Detección de abandono */
+.abandono-section h3 {
+    color: var(--text-primary) !important;
+}
+
+.abandono-stat .stat-label {
+    color: var(--text-secondary) !important;
+}
+
+.abandono-stat .stat-value {
+    color: var(--text-primary) !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TARJETAS DE RIESGO DE ABANDONO
+     ============================================ */
+
+/* Tarjetas de resumen de abandono */
+.abandono-stat {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px !important;
+    padding: 1rem !important;
+}
+
+.abandono-stat .stat-label {
+    color: var(--text-secondary) !important;
+    font-size: 0.8rem !important;
+    display: block !important;
+}
+
+.abandono-stat .stat-value {
+    color: var(--text-primary) !important;
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    display: block !important;
+}
+
+/* Para asegurar que los números se vean */
+.abandono-stat .stat-value {
+    background: transparent !important;
+}
+
+/* Colores específicos para cada nivel de riesgo en modo oscuro */
+body.dark-mode .abandono-stat .stat-value {
+    color: white !important;
+}
+
+/* Si quieres colores específicos para cada nivel */
+body.dark-mode .abandono-stat:first-child .stat-value {
+    color: #ff6666 !important;  /* Rojo claro para Alto Riesgo */
+}
+
+body.dark-mode .abandono-stat:nth-child(2) .stat-value {
+    color: #ffaa66 !important;  /* Naranja para Medio Riesgo */
+}
+
+body.dark-mode .abandono-stat:nth-child(3) .stat-value {
+    color: #66ff66 !important;  /* Verde claro para Bajo Riesgo */
+}
+
+/* ============================================
+     MODAL DE EDITAR PERFIL - SOLO TEXTOS E ICONOS
+     ============================================ */
+
+/* Modo oscuro - solo textos e iconos */
+body.dark-mode .modal-header h3 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .modal-header h3 i {
+    color: #ff0000 !important;
+}
+
+body.dark-mode .modal-close {
+    color: #999999 !important;
+}
+
+body.dark-mode .modal-close:hover {
+    color: #ff0000 !important;
+}
+
+/* Etiquetas de los campos */
+body.dark-mode .form-grupo label {
+    color: #cccccc !important;
+}
+
+body.dark-mode .form-grupo label i {
+    color: #ff0000 !important;
+}
+
+/* Texto de los inputs (cuando el usuario escribe) */
+body.dark-mode .form-grupo input {
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-grupo input::placeholder {
+    color: #888888 !important;
+}
+
+/* Texto de ayuda */
+body.dark-mode .form-help {
+    color: #888888 !important;
+}
+
+/* Botones */
+body.dark-mode .btn-secundario {
+    color: #cccccc !important;
+}
+
+body.dark-mode .btn-primario {
+    background: #ff0000 !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-primario:hover {
+    background: #cc0000 !important;
+}
+
+/* ============================================
+     BOTÓN CANCELAR - TEXTO NEGRO
+     ============================================ */
+
+/* Botón cancelar en modo oscuro */
+body.dark-mode .btn-secundario {
+    color: #000000 !important;
+    background: #e2e8f0 !important;
+}
+
+body.dark-mode .btn-secundario:hover {
+    background: #cbd5e1 !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TEXTO DE MIEMBROS EN MIS EQUIPOS
+     ============================================ */
+
+/* Texto de miembros en las tarjetas de equipo */
+.equipo-miembros {
+    color: var(--text-secondary) !important;
+}
+
+/* Asegurar que se vea en modo oscuro */
+body.dark-mode .equipo-miembros {
+    color: #cccccc !important;
+}
+
+/* También el ícono de miembros */
+.equipo-miembros i {
+    color: inherit !important;
+}
+
+/* El número de miembros */
+.equipo-meta .equipo-miembros {
+    background: transparent !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TÍTULOS EN ESTADÍAS Y DUALES
+     ============================================ */
+
+/* Título de Estadías */
+.header-estadias h2,
+.estadias-container .header-estadias h2 {
+    color: var(--text-primary) !important;
+}
+
+/* Título de Duales */
+.header-duales h2,
+.duales-container .header-duales h2 {
+    color: var(--text-primary) !important;
+}
+
+/* Asegurar en modo oscuro */
+body.dark-mode .header-estadias h2,
+body.dark-mode .header-duales h2 {
+    color: #ffffff !important;
+}
+
+/* Iconos de los títulos */
+.header-estadias h2 i,
+.header-duales h2 i {
+    color: inherit !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA CREAR EQUIPO
+     ============================================ */
+
+body.dark-mode {
+    background: #0a0a0a !important;
+}
+
+body.dark-mode .contenedor {
+    background: #1a1a1a !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-mode .contenedor h2 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-grupo label {
+    color: #cccccc !important;
+}
+
+body.dark-mode .form-grupo input,
+body.dark-mode .form-grupo textarea {
+    background: #111111 !important;
+    border-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .form-grupo input:focus,
+body.dark-mode .form-grupo textarea:focus {
+    border-color: #ff0000 !important;
+}
+
+body.dark-mode .ayuda {
+    color: #888888 !important;
+}
+
+body.dark-mode .btn-cancelar {
+    background: #333333 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-cancelar:hover {
+    background: #444444 !important;
+}
+
+body.dark-mode .btn.primario {
+    background: #ff0000 !important;
+    color: white !important;
+}
+
+body.dark-mode .btn.primario:hover {
+    background: #cc0000 !important;
+}
+
+body.dark-mode .volver a {
+    color: #ff0000 !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA TAREAS DEL EQUIPO
+     ============================================ */
+
+/* Grid y contenedor */
+body.dark-mode .tareas-grid {
+    background: transparent;
+}
+
+/* Tarjeta de tarea */
+body.dark-mode .tarea-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .tarea-card:hover {
+    box-shadow: var(--card-hover-shadow) !important;
+}
+
+/* Títulos y textos */
+body.dark-mode .tarea-titulo {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .tarea-descripcion {
+    color: var(--text-secondary) !important;
+}
+
+/* Meta y bordes */
+body.dark-mode .tarea-meta {
+    border-top-color: var(--border-color) !important;
+}
+
+/* Fechas */
+body.dark-mode .tarea-fecha {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .tarea-fecha.vencida {
+    color: var(--danger) !important;
+}
+
+body.dark-mode .tarea-fecha.proxima {
+    color: var(--warning) !important;
+}
+
+/* Creador y badges */
+body.dark-mode .tarea-creador {
+    background: var(--border-light) !important;
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .entregas-badge {
+    background: rgba(255, 0, 0, 0.15) !important;
+    color: #ff6666 !important;
+}
+
+/* Botones de tarea */
+body.dark-mode .btn-ver-tarea {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .btn-ver-tarea:hover {
+    background: var(--accent-hover) !important;
+}
+
+body.dark-mode .btn-entregar {
+    background: var(--warning) !important;
+}
+
+body.dark-mode .btn-entregar:hover {
+    background: #d97706 !important;
+}
+
+body.dark-mode .btn-calificar {
+    background: #8b5cf6 !important;
+}
+
+body.dark-mode .btn-calificar:hover {
+    background: #7c3aed !important;
+}
+
+/* Mensaje sin tareas */
+body.dark-mode .sin-tareas {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Estados de tarea */
+body.dark-mode .estado-pendiente {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+}
+
+body.dark-mode .estado-entregada {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .estado-calificada {
+    background: rgba(139, 92, 246, 0.2) !important;
+    color: #a78bfa !important;
+}
+
+/* Cabecera de tareas */
+body.dark-mode .header-tareas h2 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .btn-crear-tarea {
+    background: #dc2626 !important;
+}
+
+body.dark-mode .btn-crear-tarea:hover {
+    background: #b91c1c !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA DETALLE DE TAREA
+     ============================================ */
+
+/* Información principal */
+body.dark-mode .tarea-info-principal {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .tarea-titulo-grande {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .tarea-descripcion-completa {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .tarea-metadatos {
+    border-top-color: var(--border-color) !important;
+}
+
+body.dark-mode .metadato {
+    color: var(--text-secondary) !important;
+}
+
+/* Sección de mi entrega */
+body.dark-mode .mi-entrega {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .mi-entrega-header {
+    background: var(--bg-container) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .mi-entrega-header h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .entrega-info {
+    background: var(--bg-container) !important;
+}
+
+body.dark-mode .entrega-comentario-texto {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .entrega-calificacion-mostrada {
+    color: #34d399 !important;
+}
+
+body.dark-mode .sin-entrega {
+    color: var(--text-secondary) !important;
+}
+
+/* Botones de acción */
+body.dark-mode .btn-entregar-ahora {
+    background: var(--warning) !important;
+}
+
+body.dark-mode .btn-entregar-ahora:hover {
+    background: #d97706 !important;
+}
+
+body.dark-mode .btn-volver {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .btn-volver:hover {
+    background: var(--border-light) !important;
+}
+
+/* Lista de entregas (para líder) */
+body.dark-mode .entregas-lista-detalle h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .entrega-item-detalle {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .entrega-alumno-nombre {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .entrega-status.entregado {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .entrega-status.no-entregado {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+}
+
+body.dark-mode .btn-ver-entrega {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .btn-ver-entrega:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Modal para ver entrega */
+body.dark-mode .modal-contenido {
+    background: var(--bg-card) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .modal-header h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .modal-cerrar {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .modal-cerrar:hover {
+    color: var(--danger) !important;
+}
+
+/* ============================================
+     CORRECCIÓN MODAL - TEXTOS EN BLANCO
+     ============================================ */
+
+/* Todo el texto dentro del modal */
+body.dark-mode #modalEntregaContent,
+body.dark-mode .modal-contenido,
+body.dark-mode .modal-contenido * {
+    color: #ffffff !important;
+}
+
+/* Clases específicas que podría tener el modal */
+body.dark-mode .entrega-detalle,
+body.dark-mode .entrega-info-modal,
+body.dark-mode .entrega-comentario,
+body.dark-mode .entrega-metadata {
+    color: #ffffff !important;
+}
+
+/* Si hay etiquetas como <p>, <span>, <div> dentro del modal */
+body.dark-mode .modal-contenido p,
+body.dark-mode .modal-contenido span,
+body.dark-mode .modal-contenido div,
+body.dark-mode .modal-contenido strong,
+body.dark-mode .modal-contenido b {
+    color: #ffffff !important;
+}
+
+/* El título del modal */
+body.dark-mode .modal-header h3 {
+    color: #ffffff !important;
+}
+
+/* Los botones dentro del modal */
+body.dark-mode .modal-contenido button {
+    color: #ffffff !important;
+}
+
+/* Si hay campos de texto o áreas de texto */
+body.dark-mode .modal-contenido input,
+body.dark-mode .modal-contenido textarea,
+body.dark-mode .modal-contenido select {
+    color: #000000 !important;  /* Negro para inputs porque fondo es blanco */
+    background: #ffffff !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA ENTREGAS DE TAREA
+     ============================================ */
+
+/* Cabecera */
+body.dark-mode .header-entregas h2 {
+    color: var(--text-primary) !important;
+}
+
+/* Información de la tarea */
+body.dark-mode .info-tarea-calificar {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .info-tarea-calificar h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .info-tarea-calificar .tarea-desc {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .info-tarea-calificar .tarea-meta {
+    color: var(--text-muted) !important;
+}
+
+/* Título de entregas de alumnos */
+body.dark-mode h3 i,
+body.dark-mode .entregas-lista + h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Lista de entregas */
+body.dark-mode .entrega-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .entrega-card:hover {
+    box-shadow: var(--card-hover-shadow) !important;
+}
+
+/* Header de cada entrega */
+body.dark-mode .entrega-header {
+    background: var(--bg-container) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .entrega-alumno {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .entrega-fecha {
+    color: var(--text-secondary) !important;
+}
+
+/* Body de la entrega */
+body.dark-mode .entrega-comentario {
+    color: var(--text-secondary) !important;
+    background: var(--bg-container) !important;
+}
+
+/* Archivo adjunto */
+body.dark-mode .entrega-archivo {
+    background: var(--bg-container) !important;
+}
+
+body.dark-mode .entrega-archivo a {
+    color: #60a5fa !important;
+}
+
+body.dark-mode .entrega-archivo a:hover {
+    color: #93c5fd !important;
+}
+
+/* Calificación */
+body.dark-mode .entrega-calificacion label {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .entrega-calificacion input {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .entrega-calificacion input:focus {
+    border-color: var(--accent-primary) !important;
+}
+
+body.dark-mode .calificacion-actual {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+/* Botón calificar entrega */
+body.dark-mode .btn-calificar-entrega {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .btn-calificar-entrega:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Mensaje sin entregas */
+body.dark-mode .sin-entregas {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* ============================================
+     CORRECCIÓN ADICIONAL PARA ENTREGAS-TAREA
+     ============================================ */
+
+/* Forzar color blanco en todos los textos dentro de las tarjetas de entrega */
+body.dark-mode .entrega-card,
+body.dark-mode .entrega-card * {
+    color: #ffffff !important;
+}
+
+/* Excepción: los enlaces de archivos que deben verse azules */
+body.dark-mode .entrega-card .entrega-archivo a {
+    color: #60a5fa !important;
+}
+
+body.dark-mode .entrega-card .entrega-archivo a:hover {
+    color: #93c5fd !important;
+}
+
+/* Excepción: el input de calificación debe tener texto negro (porque fondo es blanco) */
+body.dark-mode .entrega-calificacion input {
+    color: #000000 !important;
+    background: #ffffff !important;
+}
+
+/* Placeholder del input */
+body.dark-mode .entrega-calificacion input::placeholder {
+    color: #666666 !important;
+}
+
+/* Calificación actual (badge verde) */
+body.dark-mode .calificacion-actual {
+    color: #34d399 !important;
+    background: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* El texto dentro del badge de calificación actual */
+body.dark-mode .calificacion-actual i,
+body.dark-mode .calificacion-actual {
+    color: #34d399 !important;
+}
+
+/* Los iconos dentro de las tarjetas */
+body.dark-mode .entrega-card i {
+    color: #ffffff !important;
+}
+
+/* Los textos dentro de .entrega-alumno y .entrega-fecha */
+body.dark-mode .entrega-alumno,
+body.dark-mode .entrega-alumno strong,
+body.dark-mode .entrega-fecha {
+    color: #ffffff !important;
+}
+
+/* El comentario y archivo */
+body.dark-mode .entrega-comentario,
+body.dark-mode .entrega-comentario strong,
+body.dark-mode .entrega-comentario i,
+body.dark-mode .entrega-archivo,
+body.dark-mode .entrega-archivo i {
+    color: #ffffff !important;
+}
+
+/* Las etiquetas de calificación */
+body.dark-mode .entrega-calificacion label {
+    color: #ffffff !important;
+}
+
+/* El botón de guardar calificación */
+body.dark-mode .btn-calificar-entrega {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-calificar-entrega:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* ============================================
+     CORRECCIÓN: TÍTULO "ENTREGAS DE ALUMNOS"
+     ============================================ */
+
+/* El título "Entregas de alumnos" y su ícono */
+body.dark-mode .main-content h3,
+body.dark-mode .contenedor h3,
+body.dark-mode h3 i,
+body.dark-mode h3 {
+    color: #ffffff !important;
+}
+
+/* Más específico para no afectar otros h3 */
+body.dark-mode .main-content .contenedor > h3,
+body.dark-mode .main-content .contenedor > h3 i {
+    color: #ffffff !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA CREAR TAREA
+     ============================================ */
+
+/* Contenedor principal */
+body.dark-mode .contenedor {
+    background: var(--bg-card) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Título */
+body.dark-mode .contenedor h2 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .contenedor h2 i {
+    color: var(--accent-primary) !important;
+}
+
+/* Etiquetas del formulario */
+body.dark-mode .form-grupo label {
+    color: var(--text-primary) !important;
+}
+
+/* Inputs y textareas */
+body.dark-mode .form-grupo input,
+body.dark-mode .form-grupo textarea {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .form-grupo input:focus,
+body.dark-mode .form-grupo textarea:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Placeholder */
+body.dark-mode .form-grupo input::placeholder,
+body.dark-mode .form-grupo textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Texto de ayuda */
+body.dark-mode .ayuda {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .ayuda i {
+    color: var(--accent-primary) !important;
+}
+
+/* Botón cancelar */
+body.dark-mode .btn-cancelar {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .btn-cancelar:hover {
+    background: var(--border-light) !important;
+}
+
+/* Botón primario (crear tarea) */
+body.dark-mode .btn.primario,
+body.dark-mode .btn-primario {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn.primario:hover,
+body.dark-mode .btn-primario:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Enlace volver */
+body.dark-mode .volver a {
+    color: var(--accent-primary) !important;
+}
+
+body.dark-mode .volver a:hover {
+    color: var(--accent-hover) !important;
+}
+
+body.dark-mode .volver a i {
+    color: inherit !important;
+}
+
+/* Mensajes */
+body.dark-mode .mensaje {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .mensaje.exito {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .mensaje.error {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important;
+}
+
+/* Fondo oscuro para páginas sin menú */
+body.dark-mode:not(.menu-lateral) {
+    background: var(--bg-body) !important;
+}
+
+body.dark-mode:not(.menu-lateral) .contenedor {
+    background: var(--bg-card) !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA CHAT (SIN AFECTAR ICONOS)
+     ============================================ */
+
+/* Contenedor principal */
+body.dark-mode .chat-container {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Header */
+body.dark-mode .chat-header {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .chat-header h3 {
+    color: white !important;
+}
+
+/* Área de mensajes */
+body.dark-mode .chat-mensajes {
+    background: var(--bg-container) !important;
+}
+
+/* Mensajes propios */
+body.dark-mode .mensaje-propio {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .mensaje-propio .mensaje-autor,
+body.dark-mode .mensaje-propio .mensaje-texto,
+body.dark-mode .mensaje-propio .mensaje-fecha {
+    color: white !important;
+}
+
+/* Mensajes de otros */
+body.dark-mode .mensaje-otro {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .mensaje-otro .mensaje-autor,
+body.dark-mode .mensaje-otro .mensaje-texto,
+body.dark-mode .mensaje-otro .mensaje-fecha {
+    color: var(--text-primary) !important;
+}
+
+/* Input */
+body.dark-mode .chat-input-area {
+    background: var(--bg-card) !important;
+    border-top-color: var(--border-color) !important;
+}
+
+body.dark-mode .chat-input-area input {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .chat-input-area input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Botón enviar */
+body.dark-mode .btn-chat {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+/* Estado de conexión */
+body.dark-mode .chat-estado.conectado {
+    background: var(--success) !important;
+    color: white !important;
+}
+
+/* NO tocar los iconos - dejar que FontAwesome los muestre normalmente */
+/* Los iconos mantienen su color original por defecto */
+
+/* ============================================
+     MODO OSCURO PARA DETALLE DE EQUIPO
+     ============================================ */
+
+/* Información del equipo */
+body.dark-mode .info-equipo {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .nombre-equipo {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .descripcion-equipo {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .meta-equipo {
+    border-top-color: var(--border-color) !important;
+}
+
+body.dark-mode .meta-item {
+    color: var(--text-secondary) !important;
+}
+
+/* Sección de miembros */
+body.dark-mode .miembros-section {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .miembros-header {
+    background: var(--bg-container) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .miembros-header h3 {
+    color: var(--text-primary) !important;
+}
+
+/* Lista de miembros */
+body.dark-mode .miembro-item {
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .miembro-nombre {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .miembro-rol {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .miembro-avatar {
+    background: var(--border-color) !important;
+}
+
+body.dark-mode .miembro-avatar i {
+    color: var(--text-secondary) !important;
+}
+
+/* Rol líder */
+body.dark-mode .rol-lider {
+    background: rgba(37, 99, 235, 0.2) !important;
+    color: #60a5fa !important;
+}
+
+/* Botones de acción */
+body.dark-mode .acciones-equipo .btn.primario {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .acciones-equipo .btn.primario:hover {
+    background: var(--accent-hover) !important;
+}
+
+body.dark-mode .btn-salir {
+    background: var(--danger) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-salir:hover {
+    background: #dc2626 !important;
+}
+
+/* Modal de agregar miembros */
+body.dark-mode .modal-contenido {
+    background: var(--bg-card) !important;
+}
+
+body.dark-mode .modal-header {
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .modal-header h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .modal-cerrar {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .modal-cerrar:hover {
+    color: var(--danger) !important;
+}
+
+body.dark-mode #equipoIdCodigo {
+    background: var(--bg-container) !important;
+    color: var(--accent-primary) !important;
+}
+
+/* Modal importar CSV */
+body.dark-mode .modal-confirmar-contenido {
+    background: var(--bg-card) !important;
+}
+
+body.dark-mode .modal-confirmar-header {
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .modal-confirmar-header h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .modal-confirmar-body p {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .modal-advertencia {
+    background: var(--bg-container) !important;
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .modal-confirmar-footer .btn.secundario {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .modal-confirmar-footer .btn.primario {
+    background: var(--accent-primary) !important;
+}
+
+/* Input file */
+body.dark-mode input[type="file"] {
+    background: var(--bg-container) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode input[type="file"]::file-selector-button {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Mensajes flotantes */
+body.dark-mode .mensaje-flotante {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .mensaje-flotante.exito {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .mensaje-flotante.error {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA DUALES (crear_dual.html)
+     ============================================ */
+
+/* Contenedor principal */
+body.dark-mode .duales-container {
+    background: transparent;
+}
+
+/* Cabecera */
+body.dark-mode .header-duales h2 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .header-duales h2 i {
+    color: var(--accent-primary) !important;
+}
+
+/* Formulario */
+body.dark-mode .form-dual {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Grupos de formulario */
+body.dark-mode .form-grupo label {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .form-grupo input,
+body.dark-mode .form-grupo select,
+body.dark-mode .form-grupo textarea {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .form-grupo input:focus,
+body.dark-mode .form-grupo select:focus,
+body.dark-mode .form-grupo textarea:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Placeholder */
+body.dark-mode .form-grupo input::placeholder,
+body.dark-mode .form-grupo textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Botones del formulario */
+body.dark-mode .botones-form .btn.secundario {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .botones-form .btn.secundario:hover {
+    background: var(--border-light) !important;
+}
+
+body.dark-mode .botones-form .btn.primario {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .botones-form .btn.primario:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* Mensajes */
+body.dark-mode .mensaje {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .mensaje.exito {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .mensaje.error {
+    background: rgba(239, 68, 68, 0.15) !important;
+    color: #f87171 !important;
+}
+
+/* ============================================
+     MODAL DE CONFIRMACIÓN
+     ============================================ */
+body.dark-mode .modal-confirmar-contenido {
+    background: var(--bg-card) !important;
+}
+
+body.dark-mode .modal-confirmar-header {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-bottom-color: var(--border-color) !important;
+}
+
+body.dark-mode .modal-confirmar-header h3 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .modal-confirmar-body p {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .modal-confirmar-footer {
+    background: var(--bg-container) !important;
+    border-top-color: var(--border-color) !important;
+}
+
+body.dark-mode .btn-danger {
+    background: var(--danger) !important;
+}
+
+body.dark-mode .btn-danger:hover {
+    background: #dc2626 !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA ESTADÍAS (crear_estadia.html)
+     ============================================ */
+
+/* Contenedor principal */
+body.dark-mode .estadias-container {
+    background: transparent;
+}
+
+/* Cabecera */
+body.dark-mode .header-estadias h2 {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .header-estadias h2 i {
+    color: var(--accent-primary) !important;
+}
+
+/* Formulario */
+body.dark-mode .form-estadia {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Grupos de formulario */
+body.dark-mode .form-estadia .form-grupo label {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .form-estadia .form-grupo input,
+body.dark-mode .form-estadia .form-grupo select,
+body.dark-mode .form-estadia .form-grupo textarea {
+    background: var(--bg-container) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .form-estadia .form-grupo input:focus,
+body.dark-mode .form-estadia .form-grupo select:focus,
+body.dark-mode .form-estadia .form-grupo textarea:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+}
+
+/* Placeholder */
+body.dark-mode .form-estadia .form-grupo input::placeholder,
+body.dark-mode .form-estadia .form-grupo textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+/* Botones del formulario */
+body.dark-mode .estadias-container .botones-form .btn.secundario {
+    background: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .estadias-container .botones-form .btn.secundario:hover {
+    background: var(--border-light) !important;
+}
+
+body.dark-mode .estadias-container .botones-form .btn.primario {
+    background: var(--accent-primary) !important;
+    color: white !important;
+}
+
+body.dark-mode .estadias-container .botones-form .btn.primario:hover {
+    background: var(--accent-hover) !important;
+}
+
+/* ============================================
+     MODO OSCURO PARA mis_estadias.html
+     ============================================ */
+
+/* Grid de estadías */
+body.dark-mode .estadias-grid {
+    background: transparent;
+}
+
+/* Tarjeta de estadía */
+body.dark-mode .estadia-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .estadia-card:hover {
+    box-shadow: var(--card-hover-shadow) !important;
+}
+
+/* Título y empresa */
+body.dark-mode .estadia-titulo {
+    color: var(--text-primary) !important;
+}
+
+body.dark-mode .estadia-empresa {
+    color: var(--text-secondary) !important;
+}
+
+/* Fechas y duración */
+body.dark-mode .estadia-fechas {
+    color: var(--text-secondary) !important;
+}
+
+body.dark-mode .estadia-duracion {
+    color: var(--accent-primary) !important;
+}
+
+/* Estados */
+body.dark-mode .estado-en-curso {
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+body.dark-mode .estado-pendiente {
+    background: rgba(245, 158, 11, 0.2) !important;
+    color: #fbbf24 !important;
+}
+
+body.dark-mode .estado-completada {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: #60a5fa !important;
+}
+
+body.dark-mode .estado-cancelada {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+}
+
+/* Botones de la tarjeta */
+body.dark-mode .btn-ver-estadia {
+    background: var(--accent-primary) !important;
+}
+
+body.dark-mode .btn-ver-estadia:hover {
+    background: var(--accent-hover) !important;
+}
+
+body.dark-mode .btn-editar-estadia {
+    background: var(--warning) !important;
+}
+
+body.dark-mode .btn-editar-estadia:hover {
+    background: #d97706 !important;
+}
+
+body.dark-mode .btn-eliminar-estadia {
+    background: var(--danger) !important;
+}
+
+body.dark-mode .btn-eliminar-estadia:hover {
+    background: #dc2626 !important;
+}
+
+body.dark-mode .btn-generar-reporte {
+    background: #8b5cf6 !important;
+}
+
+body.dark-mode .btn-generar-reporte:hover {
+    background: #7c3aed !important;
+}
+
+/* Sin estadías */
+body.dark-mode .sin-estadias {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Form-row (columnas) */
+body.dark-mode .form-row {
+    background: transparent;
+}

@@ -10,7 +10,31 @@
     <title>Learnify | Crear Equipo</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/crear-equipo.css">
+    <link rel="stylesheet" href="../css/temas_oscuro.css">
+    <link rel="stylesheet" href="../css/menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- ============================================ -->
+    <!-- CARGAR TEMA INMEDIATAMENTE -->
+    <!-- ============================================ -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            console.log('Tema guardado:', savedTheme);
+            if (savedTheme === 'dark') {
+                // Aplicar clase al html para que el fondo se vea desde el inicio
+                document.documentElement.style.background = '#0a0a0a';
+                // Esperar a que el body exista
+                const observer = new MutationObserver(function() {
+                    if (document.body) {
+                        document.body.classList.add('dark-mode');
+                        observer.disconnect();
+                        console.log('Modo oscuro activado');
+                    }
+                });
+                observer.observe(document.documentElement, { childList: true, subtree: true });
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="contenedor">
@@ -47,5 +71,10 @@
     </div>
     
     <script src="../js/crear-equipo.js"></script>
+    <script>
+    // Verificar si la clase dark-mode está aplicada
+    console.log('Body classes:', document.body.className);
+    console.log('dark-mode aplicada:', document.body.classList.contains('dark-mode'));
+    </script>
 </body>
 </html>

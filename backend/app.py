@@ -1893,6 +1893,89 @@ def procesar_alumno(nombre, email, resultados):
         resultados["ya_existentes"] += 1
         resultados["alumnos"].append({"nombre": nombre, "email": email, "creado": False})
         return alumno["_id"]
+
+# ============================================
+# API: ACTUALIZAR PERFIL DE USUARIO
+# ============================================
+@app.route('/api/usuarios/actualizar', methods=['PUT'])
+def actualizar_usuario():
+    try:
+        datos = request.json
+        usuario_id = datos.get('usuario_id')
+        nombre = datos.get('nombre')
+        email = datos.get('email')
+        password = datos.get('password')
+        
+        if not usuario_id or not nombre or not email:
+            return jsonify({"exito": False, "mensaje": "Datos incompletos"}), 400
+        
+        # Verificar si el email ya existe (y no es el mismo usuario)
+        existe = db.usuarios.find_one({"email": email, "_id": {"$ne": ObjectId(usuario_id)}})
+        if existe:
+            return jsonify({"exito": False, "mensaje": "El correo ya está registrado"}), 400
+        
+        actualizacion = {
+            "nombre": nombre,
+            "email": email
+        }
+        
+        if password:
+            actualizacion["password"] = password  # Texto plano (demo)
+        
+        db.usuarios.update_one(
+            {"_id": ObjectId(usuario_id)},
+            {"$set": actualizacion}
+        )
+        
+        usuario_actualizado = db.usuarios.find_one({"_id": ObjectId(usuario_id)})
+        usuario_actualizado["_id"] = str(usuario_actualizado["_id"])
+        del usuario_actualizado["password"]
+        
+        return jsonify({
+            "exito": True,
+            "mensaje": "Perfil actualizado",
+            "usuario": usuario_actualizado
+        })
+        
+    except Exception as error:
+        return jsonify({"exito": False, "mensaje": str(error)}), 400
+
+# ============================================
+# API: SUBIR FOTO DE PERFIL (GridFS)
+# ============================================
+@app.route('/api/usuarios/subir-foto', methods=['POST'])
+def subir_foto_perfil():
+    try:
+        usuario_id = request.form.get('usuario_id')
+        archivo = request.files.get('foto')
+        
+        if not usuario_id or not archivo:
+            return jsonify({"exito": False, "mensaje": "Datos incompletos"}), 400
+        
+        # Guardar en GridFS
+        nombre_archivo = secure_filename(archivo.filename)
+        archivo_id = fs.put(
+            archivo.read(),
+            filename=nombre_archivo,
+            content_type=archivo.content_type
+        )
+        
+        foto_url = f"/api/archivos/{archivo_id}"
+        
+        # Actualizar usuario
+        db.usuarios.update_one(
+            {"_id": ObjectId(usuario_id)},
+            {"$set": {"foto_url": foto_url, "foto_id": str(archivo_id)}}
+        )
+        
+        return jsonify({
+            "exito": True,
+            "mensaje": "Foto actualizada",
+            "foto_url": foto_url
+        })
+        
+    except Exception as error:
+        return jsonify({"exito": False, "mensaje": str(error)}), 400
             
 # ============================================
 # RUTA PARA SERVIR ARCHIVOS DESDE GRIDFS

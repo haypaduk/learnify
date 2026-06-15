@@ -7,8 +7,19 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/modal_editar_perfil.css">
+    <link rel="stylesheet" href="css/temas_oscuro.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    /* Ocultar el flash inicial */
+    body:not(.dark-mode) {
+        background: #f1f5f9;
+    }
+    body.dark-mode {
+        background: #0a0a0a;
+    }
+    </style>
 </head>
 <body class="menu-lateral">
     <div class="app-container">
@@ -50,7 +61,7 @@
         <main class="main-content">
             <div class="dashboard-container">
                 <div class="dashboard-header">
-                    <h1><i class="fas fa-graduation-cap"></i> Learnify Classroom</h1>
+                    <h1><i class="fas fa-graduation-cap"></i> Learnify </h1>
                     <p>Bienvenido/a, <strong id="usuarioNombre">Cargando...</strong></p>
                     <div class="user-badge" id="usuarioRol"></div>
                 </div>
@@ -127,5 +138,61 @@
     <!-- JavaScript separado -->
     <script src="js/menu.js"></script>
     <script src="js/dashboard.js"></script>
+
+    <!-- ============================================ -->
+    <!-- MODAL DE EDICIÓN DE PERFIL (fuera del main-content) -->
+    <!-- ============================================ -->
+    <div id="modalEditarPerfil" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-edit"></i> Editar Perfil</h3>
+                <button class="modal-close" onclick="cerrarModalPerfil()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Foto de perfil -->
+                <div class="perfil-foto">
+                    <div id="avatarPreview" class="perfil-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button id="btnSubirFoto" class="btn-subir-foto">
+                        <i class="fas fa-camera"></i> Cambiar foto
+                    </button>
+                    <input type="file" id="inputFoto" accept="image/*" style="display: none;">
+                </div>
+
+                <!-- Campos del formulario -->
+                <div class="form-grupo">
+                    <label><i class="fas fa-user"></i> Nombre completo</label>
+                    <input type="text" id="editNombre" class="form-control" placeholder="Tu nombre">
+                </div>
+
+                <div class="form-grupo">
+                    <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" id="editEmail" class="form-control" placeholder="tu@email.com">
+                </div>
+
+                <div class="form-grupo">
+                    <label><i class="fas fa-lock"></i> Nueva contraseña</label>
+                    <input type="password" id="editPassword" class="form-control" placeholder="Dejar en blanco para no cambiar">
+                    <small class="form-help">Mínimo 6 caracteres</small>
+                </div>
+
+                <div class="form-grupo">
+                    <label><i class="fas fa-check-circle"></i> Confirmar contraseña</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Repite la nueva contraseña">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="cerrarModalPerfil()" class="btn btn-secundario">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button onclick="guardarCambiosPerfil()" class="btn btn-primario">
+                    <i class="fas fa-save"></i> Guardar cambios
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
