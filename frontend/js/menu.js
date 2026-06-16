@@ -72,101 +72,136 @@ let modalCargado = false;
 
 function asegurarModalCargado() {
     return new Promise((resolve) => {
+        // Si ya existe el modal en el DOM
         if (document.getElementById('modalEditarPerfil')) {
+            console.log('✅ Modal ya existe en DOM');
+            // Asegurar que los eventos estén configurados
+            if (!modalCargado) {
+                configurarEventosModal();
+                modalCargado = true;
+            }
             resolve();
             return;
         }
         
+        console.log('📥 Cargando modal desde archivo...');
         fetch('/modal_editar_perfil.html')
             .then(response => response.text())
             .then(html => {
                 document.body.insertAdjacentHTML('beforeend', html);
+                console.log('✅ Modal insertado en DOM');
                 modalCargado = true;
-                configurarEventosModal();
-                resolve();
+                // Esperar un poco a que el DOM se actualice
+                setTimeout(() => {
+                    configurarEventosModal();
+                    resolve();
+                }, 100);
             })
             .catch(error => {
-                console.error('Error al cargar modal:', error);
+                console.error('❌ Error al cargar modal:', error);
                 resolve();
             });
     });
 }
 
 function configurarEventosModal() {
-    const btnSubirFoto = document.getElementById('btnSubirFoto');
-    const inputFoto = document.getElementById('inputFoto');
+    console.log('🔧 Configurando eventos del modal...');
     
-    if (btnSubirFoto && inputFoto) {
-        btnSubirFoto.onclick = () => inputFoto.click();
+    // Pequeño retraso para asegurar que los elementos existen
+    setTimeout(() => {
+        const btnSubirFoto = document.getElementById('btnSubirFoto');
+        const inputFoto = document.getElementById('inputFoto');
         
-        inputFoto.onchange = async function(e) {
-            const archivo = e.target.files[0];
-            if (!archivo) return;
+        console.log('🔍 btnSubirFoto:', btnSubirFoto ? '✅ encontrado' : '❌ no encontrado');
+        console.log('🔍 inputFoto:', inputFoto ? '✅ encontrado' : '❌ no encontrado');
+        
+        if (btnSubirFoto && inputFoto) {
+            // Remover eventos anteriores clonando (evita duplicados)
+            const nuevoBtn = btnSubirFoto.cloneNode(true);
+            const nuevoInput = inputFoto.cloneNode(true);
+            btnSubirFoto.parentNode.replaceChild(nuevoBtn, btnSubirFoto);
+            inputFoto.parentNode.replaceChild(nuevoInput, inputFoto);
             
-            const usuario = JSON.parse(localStorage.getItem('usuario'));
-            if (!usuario) return;
+            const btnFinal = document.getElementById('btnSubirFoto');
+            const inputFinal = document.getElementById('inputFoto');
             
-            const formData = new FormData();
-            formData.append('foto', archivo);
-            formData.append('usuario_id', usuario._id);
+            btnFinal.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🖱️ Click en botón subir foto - abriendo selector');
+                inputFinal.click();
+            };
             
-            // Mostrar loading en el avatar del menú
-            const userAvatar = document.querySelector('#userInfoSidebar .user-avatar');
-            const originalContent = userAvatar ? userAvatar.innerHTML : '';
-            if (userAvatar) {
-                userAvatar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
-            }
-            
-            try {
-                const respuesta = await fetch('/api/usuarios/subir-foto', {
-                    method: 'POST',
-                    body: formData
-                });
+            inputFinal.onchange = async function(e) {
+                const archivo = e.target.files[0];
+                console.log('📁 Archivo seleccionado:', archivo ? archivo.name : 'ninguno');
+                if (!archivo) return;
                 
-                const resultado = await respuesta.json();
+                const usuario = JSON.parse(localStorage.getItem('usuario'));
+                if (!usuario) {
+                    console.log('❌ Usuario no encontrado en localStorage');
+                    return;
+                }
                 
-                if (resultado.exito) {
-                    // Actualizar vista previa en el modal
-                    const avatarPreview = document.getElementById('avatarPreview');
-                    if (avatarPreview) {
-                        avatarPreview.style.backgroundImage = `url(${resultado.foto_url}?t=${Date.now()})`;
-                        avatarPreview.style.backgroundSize = 'cover';
-                        avatarPreview.innerHTML = '';
+                const formData = new FormData();
+                formData.append('foto', archivo);
+                formData.append('usuario_id', usuario._id);
+                
+                const userAvatar = document.querySelector('#userInfoSidebar .user-avatar');
+                const originalContent = userAvatar ? userAvatar.innerHTML : '';
+                if (userAvatar) {
+                    userAvatar.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+                }
+                
+                try {
+                    const respuesta = await fetch('/api/usuarios/subir-foto', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const resultado = await respuesta.json();
+                    console.log('📡 Respuesta del servidor:', resultado);
+                    
+                    if (resultado.exito) {
+                        const avatarPreview = document.getElementById('avatarPreview');
+                        if (avatarPreview) {
+                            avatarPreview.style.backgroundImage = `url(${resultado.foto_url}?t=${Date.now()})`;
+                            avatarPreview.style.backgroundSize = 'cover';
+                            avatarPreview.style.backgroundPosition = 'center';
+                            avatarPreview.innerHTML = '';
+                        }
+                        
+                        if (userAvatar) {
+                            userAvatar.style.backgroundImage = `url(${resultado.foto_url}?t=${Date.now()})`;
+                            userAvatar.style.backgroundSize = 'cover';
+                            userAvatar.style.backgroundPosition = 'center';
+                            userAvatar.innerHTML = '';
+                        }
+                        
+                        usuario.foto_url = resultado.foto_url;
+                        localStorage.setItem('usuario', JSON.stringify(usuario));
+                        
+                        mostrarMensaje('exito', 'Foto actualizada correctamente');
+                    } else {
+                        mostrarMensaje('error', resultado.mensaje);
+                        if (userAvatar) {
+                            userAvatar.innerHTML = originalContent;
+                        }
                     }
-                    
-                    // Actualizar avatar en el menú lateral
-                    if (userAvatar) {
-                        userAvatar.style.backgroundImage = `url(${resultado.foto_url}?t=${Date.now()})`;
-                        userAvatar.style.backgroundSize = 'cover';
-                        userAvatar.style.backgroundPosition = 'center';
-                        userAvatar.innerHTML = '';
-                    }
-                    
-                    // Actualizar usuario en localStorage
-                    usuario.foto_url = resultado.foto_url;
-                    localStorage.setItem('usuario', JSON.stringify(usuario));
-                    
-                    mostrarMensaje('exito', 'Foto actualizada correctamente');
-                    
-                    // Recargar el menú para asegurar
-                    setTimeout(() => {
-                        cargarInfoUsuarioEnMenu();
-                    }, 100);
-                } else {
-                    mostrarMensaje('error', resultado.mensaje);
+                } catch (error) {
+                    console.error('❌ Error en fetch:', error);
+                    mostrarMensaje('error', 'Error de conexión al servidor');
                     if (userAvatar) {
                         userAvatar.innerHTML = originalContent;
                     }
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarMensaje('error', 'Error al subir foto');
-                if (userAvatar) {
-                    userAvatar.innerHTML = originalContent;
-                }
-            }
-        };
-    }
+            };
+            
+            console.log('✅ Eventos configurados correctamente');
+        } else {
+            console.error('❌ No se encontraron btnSubirFoto o inputFoto');
+        }
+    }, 50);
 }
 
 // ============================================
@@ -180,6 +215,9 @@ async function abrirModalEditarPerfil() {
     if (!usuario) return;
     
     usuarioActual = usuario;
+    
+    // Asegurar que el modal está cargado antes de mostrarlo
+    await asegurarModalCargado();
     
     // Esperar a que los elementos existan
     const esperarElementos = () => {
@@ -203,9 +241,10 @@ async function abrirModalEditarPerfil() {
             if (usuario.foto_url) {
                 avatarPreview.style.backgroundImage = `url(${usuario.foto_url})`;
                 avatarPreview.style.backgroundSize = 'cover';
+                avatarPreview.style.backgroundPosition = 'center';
                 avatarPreview.innerHTML = '';
             } else {
-                avatarPreview.style.backgroundImage = '';
+                avatarPreview.style.backgroundImage = 'none';
                 avatarPreview.innerHTML = '<i class="fas fa-user"></i>';
             }
         }

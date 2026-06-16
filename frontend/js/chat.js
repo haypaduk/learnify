@@ -16,6 +16,28 @@ if (!equipoId) {
 }
 
 // ============================================
+// REGISTRAR ACTIVIDAD DEL USUARIO
+// ============================================
+async function registrarActividad(tipo, descripcion = '') {
+    try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) return;
+        
+        await fetch('/api/registrar-actividad', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario_id: usuario._id,
+                tipo: tipo,
+                descripcion: descripcion
+            })
+        });
+    } catch (error) {
+        console.error('Error al registrar actividad:', error);
+    }
+}
+
+// ============================================
 // ESCAPAR HTML
 // ============================================
 function escapeHtml(texto) {
@@ -130,6 +152,8 @@ async function enviarMensaje() {
         console.error('Error al enviar:', error);
         alert('❌ Error de conexión');
     }
+    // Registrar actividad
+    registrarActividad('chat', `Envió mensaje en el chat del equipo ${equipoId}`);
 }
 
 // ============================================

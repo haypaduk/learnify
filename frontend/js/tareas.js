@@ -19,13 +19,79 @@ if (!equipoId) {
 }
 
 // ============================================
+// REGISTRAR ACTIVIDAD DEL USUARIO
+// ============================================
+async function registrarActividad(tipo, descripcion = '') {
+    try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) return;
+        
+        await fetch('/api/registrar-actividad', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario_id: usuario._id,
+                tipo: tipo,
+                descripcion: descripcion
+            })
+        });
+    } catch (error) {
+        console.error('Error al registrar actividad:', error);
+    }
+}
+
+// ============================================
+// VERIFICAR SI EL USUARIO ES LÍDER DEL EQUIPO
+// ============================================
+async function verificarLider() {
+    try {
+        const respuesta = await fetch(`/api/equipos/detalle/${equipoId}`);
+        const resultado = await respuesta.json();
+        
+        if (resultado.exito) {
+            const equipo = resultado.equipo;
+            const esLider = (equipo.lider_id === usuario._id);
+            
+            console.log('Verificando líder:');
+            console.log('  - usuario._id:', usuario._id);
+            console.log('  - equipo.lider_id:', equipo.lider_id);
+            console.log('  - esLider:', esLider);
+            
+            const btnCrear = document.getElementById('btnCrearTarea');
+            if (btnCrear) {
+                if (esLider) {
+                    btnCrear.style.display = 'flex';
+                    btnCrear.onclick = crearTarea;
+                    console.log('Botón CREAR TAREA: MOSTRADO (es líder)');
+                } else {
+                    btnCrear.style.display = 'none';
+                    console.log('Botón CREAR TAREA: OCULTO (no es líder)');
+                }
+            }
+            return esLider;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error al verificar líder:', error);
+        return false;
+    }
+}
+
+// ============================================
 // CARGAR TAREAS DEL EQUIPO
 // ============================================
 async function cargarTareas() {
+    // Registrar actividad
+    registrarActividad('ver_tareas', `Viendo tareas del equipo ${equipoId}`);
+    
     const container = document.getElementById('tareasContainer');
     container.innerHTML = '<div class="sin-tareas"><i class="fas fa-spinner fa-pulse"></i> Cargando tareas...</div>';
     
     try {
+        // Primero verificar si es líder (para el botón)
+        await verificarLider();
+        
+        // Luego cargar las tareas
         const respuesta = await fetch(`/api/tareas/equipo/${equipoId}`);
         const resultado = await respuesta.json();
         
@@ -56,7 +122,9 @@ function mostrarTareas(tareas) {
         const hoy = new Date();
         const estaVencida = fechaLimite && fechaLimite < hoy;
         
-        const esLiderDeEsteEquipo = tarea.lider_id === usuario._id;
+        // Determinar si el usuario puede calificar o entregar
+        const puedeCalificar = (tarea.lider_id === usuario._id);
+        const puedeEntregar = !puedeCalificar && usuario.rol === 'alumno';
         
         return `
             <div class="tarea-card">
@@ -72,10 +140,10 @@ function mostrarTareas(tareas) {
                 <div class="tarea-acciones">
                     <button onclick="verDetalleTarea('${tarea._id}')" class="btn btn-ver-tarea"><i class="fas fa-eye"></i> Ver detalles</button>
                     
-                    ${!esLiderDeEsteEquipo ? 
+                    ${puedeEntregar ? 
                         `<button onclick="entregarTarea('${tarea._id}')" class="btn btn-entregar"><i class="fas fa-upload"></i> Entregar</button>` : ''}
                     
-                    ${esLiderDeEsteEquipo ? 
+                    ${puedeCalificar ? 
                         `<button onclick="verEntregas('${tarea._id}')" class="btn btn-calificar"><i class="fas fa-star"></i> Calificar</button>` : ''}
                 </div>
             </div>
@@ -132,9 +200,4 @@ function formatearFecha(fecha) {
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
     cargarTareas();
-    
-    const btnCrear = document.getElementById('btnCrearTarea');
-    if (btnCrear) {
-        btnCrear.onclick = crearTarea;
-    }
 });

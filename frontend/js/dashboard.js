@@ -11,6 +11,29 @@ if (!usuario) {
 }
 
 // ============================================
+// REGISTRAR ACTIVIDAD DEL USUARIO
+// ============================================
+async function registrarActividad(tipo, descripcion = '') {
+    try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) return;
+        
+        await fetch('/api/registrar-actividad', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario_id: usuario._id,
+                tipo: tipo,
+                descripcion: descripcion
+            })
+        });
+        console.log(` Actividad registrada: ${tipo}`);
+    } catch (error) {
+        console.error('Error al registrar actividad:', error);
+    }
+}
+
+// ============================================
 // FORMATEAR FECHA
 // ============================================
 function formatearFecha(fecha) {
@@ -325,6 +348,8 @@ Generado: ${new Date().toLocaleString('es-MX')}
 // INICIALIZAR DASHBOARD
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
+    // Registrar actividad
+    registrarActividad('dashboard', 'Entró al dashboard');
     mostrarInfoUsuario();
     cargarEquipos();
     cargarTareasPendientes();

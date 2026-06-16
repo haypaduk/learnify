@@ -60,6 +60,115 @@ def convertir_objectid(documento):
     return documento
 
 # ============================================
+# REGISTRAR ACTIVIDAD DEL USUARIO
+# ============================================
+def registrar_actividad(usuario_id, tipo_accion, descripcion=""):
+    """
+    Registra cualquier acción del usuario en la colección actividad
+    Útil para el sistema de detección de abandono escolar
+    
+    Parámetros:
+    - usuario_id: ID del usuario (string o ObjectId)
+    - tipo_accion: "login", "ver_tareas", "enviar_mensaje", etc.
+    - descripcion: Descripción opcional de la acción
+    """
+    try:
+        # Convertir a ObjectId si es string
+        if isinstance(usuario_id, str):
+            usuario_id = ObjectId(usuario_id)
+        
+        db.actividad.insert_one({
+            "usuario_id": usuario_id,
+            "tipo": tipo_accion,
+            "descripcion": descripcion,
+            "fecha": datetime.now(),
+            "ip": request.remote_addr if request else None
+        })
+        print(f" Actividad registrada: {tipo_accion} - Usuario: {usuario_id}")
+    except Exception as e:
+        print(f" Error al registrar actividad: {e}")
+
+# ============================================
+# DECORADOR PARA REGISTRAR ACTIVIDAD
+# ============================================
+from functools import wraps
+
+def registrar_actividad_decorator(tipo_accion):
+    """
+    Decorador que registra actividad del usuario después de ejecutar la ruta
+    
+    Uso: @registrar_actividad_decorator("ver_tareas")
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            # Ejecutar la función original
+            response = f(*args, **kwargs)
+            
+            # Intentar obtener usuario_id de diferentes fuentes
+            usuario_id = None
+            
+            # 1. Desde los argumentos de la ruta
+            if 'usuario_id' in kwargs:
+                usuario_id = kwargs['usuario_id']
+            elif 'alumno_id' in kwargs:
+                usuario_id = kwargs['alumno_id']
+            
+            # 2. Desde el cuerpo de la petición (JSON)
+            if not usuario_id and request.json:
+                usuario_id = (request.json.get('usuario_id') or 
+                             request.json.get('alumno_id') or 
+                             request.json.get('creador_id') or
+                             request.json.get('lider_id'))
+            
+            # 3. Desde los parámetros de la URL
+            if not usuario_id:
+                usuario_id = (request.args.get('usuario_id') or 
+                             request.args.get('alumno_id'))
+            
+            # 4. Si es string, convertirlo a ObjectId para la función
+            if usuario_id:
+                try:
+                    registrar_actividad(usuario_id, tipo_accion)
+                except Exception as e:
+                    print(f" Error al registrar actividad en decorador: {e}")
+            
+            return response
+        return decorated_function
+    return decorator
+
+# ============================================
+# API: REGISTRAR ACTIVIDAD (desde frontend)
+# ============================================
+@app.route('/api/registrar-actividad', methods=['POST'])
+def api_registrar_actividad():
+    """
+    Endpoint para que el frontend registre actividad del usuario
+    Útil para acciones que no pasan por las rutas principales
+    """
+    try:
+        datos = request.json
+        usuario_id = datos.get('usuario_id')
+        tipo = datos.get('tipo', 'accion')
+        descripcion = datos.get('descripcion', '')
+        
+        if not usuario_id:
+            return jsonify({"exito": False, "mensaje": "Usuario no identificado"}), 400
+        
+        registrar_actividad(usuario_id, tipo, descripcion)
+        
+        return jsonify({
+            "exito": True, 
+            "mensaje": "Actividad registrada"
+        })
+        
+    except Exception as error:
+        return jsonify({
+            "exito": False, 
+            "mensaje": str(error)
+        }), 400
+    
+# ============================================
 # RUTA DE PRUEBA (para verificar que el servidor funciona)
 # ============================================
 @app.route('/api/test', methods=['GET'])
@@ -133,21 +242,18 @@ def registrar_usuario():
 # ============================================
 @app.route('/api/iniciar-sesion', methods=['POST'])
 def iniciar_sesion():
-    """
-    Verifica credenciales y devuelve datos del usuario
-    """
     try:
         datos = request.json
         email = datos['email']
         password = datos['password']
 
-        # Buscar usuario en MongoDB
         usuario = db.usuarios.find_one({"email": email})
         
         if usuario and usuario['password'] == password:
-            # Convertir ObjectId a string
+            # ✅ REGISTRAR ACTIVIDAD DE LOGIN
+            registrar_actividad(usuario['_id'], "login", f"Inicio de sesión desde {request.remote_addr}")
+            
             usuario['_id'] = str(usuario['_id'])
-            # No enviar la contraseña al frontend
             del usuario['password']
 
             return jsonify({
@@ -166,7 +272,6 @@ def iniciar_sesion():
             "exito": False,
             "mensaje": str(error)
         }), 400
-
 
 # ============================================
 # ARCHIVO 12/20: API DE EQUIPOS

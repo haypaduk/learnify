@@ -170,3 +170,64 @@
     font-size: 0.7rem;
     font-weight: 500;
 }
+
+/* Ajuste de espaciado para el botón "Crear tarea" */
+.btn-crear-tarea i {
+    margin-right: 8px;
+}
+
+/* Si el icono sigue pegado, forzar espaciado */
+.btn-crear-tarea .fa-plus-circle,
+.btn-crear-tarea i.fa-plus-circle {
+    margin-right: 8px !important;
+}
+
+/* También aplicar a otros botones similares */
+.btn.primario i,
+.btn-primario i {
+    margin-right: 8px;
+}
+
+/* ============================================
+     AJUSTE DE ALINEACIÓN PARA BOTÓN CREAR TAREA
+     ============================================ */
+
+/* Alinear icono y texto verticalmente */
+.btn-crear-tarea {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    padding: 10px 20px;
+    line-height: 1.2;
+}
+
+.btn-crear-tarea i {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+/* También arreglar el botón si es flex */
+#btnCrearTarea {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+}
+
+/* ============================================
+     FORZAR OCULTAMIENTO DEL BOTÓN POR DEFECTO
+     ============================================ */
+
+/* Ocultar por defecto (será mostrado por JS si es líder) */
+#btnCrearTarea {
+    display: none !important;
+}
+
+/* Mostrar solo cuando JS lo active (con estilo inline) */
+#btnCrearTarea[style*="display: flex"] {
+    display: flex !important;
+}

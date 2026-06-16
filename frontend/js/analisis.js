@@ -20,6 +20,29 @@ let graficaDistribucion = null;
 let equiposCache = [];
 
 // ============================================
+// REGISTRAR ACTIVIDAD DEL USUARIO
+// ============================================
+async function registrarActividad(tipo, descripcion = '') {
+    try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) return;
+        
+        await fetch('/api/registrar-actividad', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuario_id: usuario._id,
+                tipo: tipo,
+                descripcion: descripcion
+            })
+        });
+        console.log(` Actividad registrada: ${tipo}`);
+    } catch (error) {
+        console.error('Error al registrar actividad:', error);
+    }
+}
+
+// ============================================
 // CARGAR EQUIPOS DEL MAESTRO
 // ============================================
 async function cargarEquipos() {
@@ -50,7 +73,9 @@ async function cargarEquipos() {
 // CARGAR DATOS DEL EQUIPO SELECCIONADO
 // ============================================
 async function cargarDatosEquipo(equipoId) {
-    if (!equipoId) return;
+    // Registrar actividad al ver análisis
+    registrarActividad('ver_analisis', `Viendo análisis del equipo ${equipoId}`);
+        if (!equipoId) return;
     
     // Mostrar loading
     document.getElementById('totalAlumnos').textContent = '...';
